@@ -19,7 +19,7 @@ const EventCard = ({ event, isActive, onOpenModal }) => {
           alt={event.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        <div className="absolute top-2 sm:top-3 right-1.5 sm:right-3 z-30 bg-black/90 border border-[#00FF00] px-2 sm:px-2.5 py-1 rounded-md text-[9px] sm:text-[10px] text-[#00FF00] font-black shadow-[0_0_15px_rgba(0,255,0,0.4)] flex items-center justify-center min-w-[60px] sm:min-w-[70px]">
+        <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-30 bg-black/95 border border-[#00FF00] px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs text-[#00FF00] font-black shadow-[0_0_20px_rgba(0,255,0,0.5)] flex items-center justify-center whitespace-nowrap">
           PRIZE: {event.prize}
         </div>
       </div>

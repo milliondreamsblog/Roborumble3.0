@@ -56,18 +56,18 @@ const EventModal = ({ event, onClose }) => {
             {isCompetition && event.prize && (
               <div className="bg-[#1a1c23] border border-yellow-500/30 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg flex items-center gap-1.5 sm:gap-3">
                 <Trophy className="text-yellow-500 shrink-0" size={12} />
-                <div className="min-w-0">
-                  <span className="block text-[7px] sm:text-[10px] text-slate-500 uppercase font-bold truncate">Prize Pool</span>
-                  <span className="text-yellow-400 font-bold text-[9px] sm:text-sm truncate">{event.prize}</span>
+                <div className="min-w-0 flex-1">
+                  <span className="block text-[7px] sm:text-[10px] text-slate-500 uppercase font-black tracking-tighter sm:tracking-normal">Prize Pool</span>
+                  <span className="text-yellow-400 font-bold text-[9px] sm:text-sm leading-none">{event.prize}</span>
                 </div>
               </div>
             )}
 
             <div className="bg-[#1a1c23] border border-slate-700 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg flex items-center gap-1.5 sm:gap-3">
               <Users className="text-cyan-400 shrink-0" size={12} />
-              <div className="min-w-0">
-                <span className="block text-[7px] sm:text-[10px] text-slate-500 uppercase font-bold truncate">Eligibility</span>
-                  <span className="text-slate-200 font-bold text-[9px] sm:text-sm truncate">{event.eligibility || "Open for All"}</span>
+              <div className="min-w-0 flex-1">
+                <span className="block text-[7px] sm:text-[10px] text-slate-500 uppercase font-black tracking-tighter sm:tracking-normal">Eligibility</span>
+                  <span className="text-slate-200 font-bold text-[9px] sm:text-sm leading-none">{event.eligibility || "Open for All"}</span>
               </div>
             </div>
           </div>
