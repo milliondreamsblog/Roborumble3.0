@@ -1,34 +1,47 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState, useRef } from "react";
 
-export const SlotText = ({ text, className = "" }) => {
+const CHARS = "-_~=+*!@#$%^&()[]{}|;:,.<>?/";
+
+export const SlotText = ({ text = "", className = "" }) => {
   const [displayText, setDisplayText] = useState("");
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
+  const intervalRef = useRef(null);
 
   useEffect(() => {
-    let currentIteration = 0;
-    const maxIterations = 10;
-    const interval = setInterval(() => {
-      const scrambled = text
-        .split("")
-        .map((char, index) => {
-          if (char === " " || char === "_") return char;
-          if (currentIteration >= maxIterations + index) return char;
-          return characters.charAt(Math.floor(Math.random() * characters.length));
-        })
-        .join("");
+    let iteration = 0;
 
-      setDisplayText(scrambled);
-      currentIteration++;
+    clearInterval(intervalRef.current);
 
-      if (currentIteration > maxIterations + text.length) {
-        clearInterval(interval);
+    intervalRef.current = setInterval(() => {
+      setDisplayText(
+        text
+          .split("")
+          .map((letter, index) => {
+            if (index < iteration) {
+              return text[index];
+            }
+            // Preserve spaces visually
+            if (letter === " ") return " ";
+
+            return CHARS[Math.floor(Math.random() * CHARS.length)];
+          })
+          .join("")
+      );
+
+      if (iteration >= text.length) {
+        clearInterval(intervalRef.current);
       }
-    }, 50);
 
-    return () => clearInterval(interval);
+      iteration += 1 / 3;
+    }, 30);
+
+    return () => clearInterval(intervalRef.current);
   }, [text]);
 
-  return <span className={className}>{displayText}</span>;
-}
+  return (
+    <span className={className} aria-label={text}>
+      <span aria-hidden="true">{displayText}</span>
+    </span>
+  );
+};
