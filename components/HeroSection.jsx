@@ -78,63 +78,73 @@ const HeroSectionNew = () => {
       {/* 2. Vignette/Overlay for better text contrast */}
       <div className="absolute inset-0 z-0 bg-radial-gradient-vignette opacity-80 pointer-events-none" />
 
-      {/* 3. Main Content Container */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center w-full px-4 max-w-7xl mx-auto">
+      {/* LAYER 2: HERO SECTION CONTENT */}
+      <div className="relative z-10 w-full flex-grow flex flex-col items-center justify-center pt-24 md:pt-32">
 
-        {/* TOP DECORATION */}
-        <div className="mb-4 flex items-center gap-4 opacity-70">
-          <div className="h-[1px] w-12 md:w-24 bg-red-600"></div>
-          <span className="text-[10px] md:text-xs font-mono font-bold tracking-[0.3em] text-red-500 uppercase">
-            Build Compete Dominate
-          </span>
-          <div className="h-[1px] w-12 md:w-24 bg-red-600"></div>
-        </div>
+        {/* ROBOT IMAGE */}
+        <motion.div
+          className="relative w-full flex justify-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1, y: [-10, 10, -10] }}
+          transition={{
+            opacity: { duration: 1 },
+            scale: { duration: 1 },
+            y: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+          }}
+        >
+          <img
+            src="/uiettechfest.jpeg"
+            alt="Robo Theme"
+            className="h-[40vh] md:h-[55vh] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,200,255,0.2)]"
+            style={{
+              maskImage: "linear-gradient(to bottom, black 50%, transparent 95%)",
+              WebkitMaskImage: "linear-gradient(to bottom, black 50%, transparent 95%)",
+            }}
+          />
+        </motion.div>
 
-        {/* MAIN HEADING */}
-        <div className="flex flex-col items-center leading-none select-none">
-          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-black text-white tracking-tighter mix-blend-screen drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
-            ROBO
-          </h1>
-          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-black text-white tracking-tighter mix-blend-screen drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] -mt-2 md:-mt-6">
-            RUMBLE
-          </h1>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 mt-2 tracking-widest drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
-            3.0
-          </h2>
-        </div>
-
-        {/* SUBTEXT */}
-        <div className="mt-8 max-w-2xl px-4">
-          <p className="text-gray-400 text-sm md:text-base font-mono leading-relaxed">
-            Where Innovation Meets Competition. Join the ultimate robotics
-            showdown featuring top talent from across the nation. //
-          </p>
-          <p className="text-green-500/80 text-xs md:text-sm font-mono mt-2 animate-pulse">
-            SYSTEM_STATUS: READY
-          </p>
-        </div>
-
-        {/* --- BUTTONS ROW --- */}
-        <div className="mt-12 flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
-
-          {/* Button 1: REGISTER NOW (Red Block) */}
-          <a
-            href="/register"
-            className="group relative w-full md:w-auto flex items-center justify-center gap-3 bg-[#FF003C] text-black font-bold font-mono text-sm md:text-base px-8 py-4 clip-path-slant hover:bg-[#ff3366] transition-all duration-300 min-w-[200px]"
-            style={{ clipPath: "polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)" }}
+        {/* TITLE & PRIZE POOL */}
+        <div className="flex flex-col items-center gap-6 pb-20 -mt-10 md:-mt-14 relative z-20">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-green-400 font-black tracking-widest text-center uppercase px-4"
+            style={{
+              fontSize: "clamp(28px, 6vw, 64px)",
+              filter: "drop-shadow(0 0 20px rgba(34, 255, 200, 0.5))",
+            }}
           >
-            REGISTER_NOW
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="group-hover:translate-x-1 transition-transform"
+            ROBO RUMBLE'26
+          </motion.h1>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            whileHover={{ scale: 1.05 }}
+            className="relative group cursor-pointer"
+          >
+            <div className="absolute -inset-2 bg-gradient-to-r from-green-500 to-cyan-500 rounded-lg blur-2xl opacity-20 group-hover:opacity-50 transition duration-500"></div>
+            <div className="relative px-8 sm:px-12 py-3 sm:py-4 bg-black/60 backdrop-blur-xl border border-white/10 rounded-lg flex flex-col items-center shadow-lg">
+              <span className="text-cyan-400 text-[10px] sm:text-sm tracking-[0.3em] sm:tracking-[0.4em] font-bold uppercase mb-1">
+                Total Prize Pool
+              </span>
+              <span className="text-white text-2xl sm:text-4xl md:text-5xl font-bold tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+                ₹ 1,56,000
+              </span>
+            </div>
+          </motion.div>
+
+          {/* REGISTER BUTTON */}
+          <Link href="/dashboard">
+            <motion.button
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              whileHover={{ scale: 1.1, boxShadow: "0 0 20px rgba(0, 255, 255, 0.6)" }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-4 bg-transparent border-2 border-cyan-400 text-cyan-400 font-bold uppercase tracking-widest rounded-full hover:bg-cyan-400 hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(34,211,238,0.3)] relative overflow-hidden group"
             >
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>

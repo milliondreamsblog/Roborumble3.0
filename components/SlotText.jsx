@@ -1,47 +1,34 @@
-"use client";
+"use client"
 
-import { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect } from 'react';
 
-const CHARS = "-_~=+*!@#$%^&()[]{}|;:,.<>?/";
-
-export const SlotText = ({ text = "", className = "" }) => {
+export const SlotText = ({ text, className = "" }) => {
   const [displayText, setDisplayText] = useState("");
-  const intervalRef = useRef(null);
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
 
   useEffect(() => {
-    let iteration = 0;
+    let currentIteration = 0;
+    const maxIterations = 10;
+    const interval = setInterval(() => {
+      const scrambled = text
+        .split("")
+        .map((char, index) => {
+          if (char === " " || char === "_") return char;
+          if (currentIteration >= maxIterations + index) return char;
+          return characters.charAt(Math.floor(Math.random() * characters.length));
+        })
+        .join("");
 
-    clearInterval(intervalRef.current);
+      setDisplayText(scrambled);
+      currentIteration++;
 
-    intervalRef.current = setInterval(() => {
-      setDisplayText(
-        text
-          .split("")
-          .map((letter, index) => {
-            if (index < iteration) {
-              return text[index];
-            }
-            // Preserve spaces visually
-            if (letter === " ") return " ";
-
-            return CHARS[Math.floor(Math.random() * CHARS.length)];
-          })
-          .join("")
-      );
-
-      if (iteration >= text.length) {
-        clearInterval(intervalRef.current);
+      if (currentIteration > maxIterations + text.length) {
+        clearInterval(interval);
       }
+    }, 50);
 
-      iteration += 1 / 3;
-    }, 30);
-
-    return () => clearInterval(intervalRef.current);
+    return () => clearInterval(interval);
   }, [text]);
 
-  return (
-    <span className={className} aria-label={text}>
-      <span aria-hidden="true">{displayText}</span>
-    </span>
-  );
-};
+  return <span className={className}>{displayText}</span>;
+}
