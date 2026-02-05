@@ -19,20 +19,20 @@ const Footer = () => {
     ]
 
     const socialLinks = [
-        { icon: <FaInstagram size={18} />, href: '#' },
+        { icon: <FaInstagram size={18} />, href: 'https://www.instagram.com/roborumble.3.o?igsh=MWQxdGE1MDgxZnA4YQ==' },
         { icon: <FaLinkedinIn size={18} />, href: '#' },
     ]
 
     return (
-        <footer className="relative w-full bg-[#020617] border-t border-white/5 pt-16 pb-8 px-4 md:px-12 lg:px-24 overflow-hidden">
+        <footer className="relative w-full bg-[#020617] border-t border-white/5 pt-6 pb-4 px-4 md:px-12 lg:px-24 overflow-hidden">
             {/* Background Grid/Glow Effects */}
             <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-[1px] h-full bg-gradient-to-b from-[#00FF9E]/50 via-transparent to-transparent"></div>
                 <div className="absolute top-0 right-1/4 w-[1px] h-full bg-gradient-to-b from-[#00FF9E]/50 via-transparent to-transparent"></div>
             </div>
 
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 relative z-10">
-                
+            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-8 relative z-10">
+
                 {/* Brand Section */}
                 <div className="space-y-6">
                     <div>
@@ -42,10 +42,11 @@ const Footer = () => {
                         </h2>
                         <p className="text-xs tracking-[0.2em] font-orbitron text-white/60 mt-2 uppercase">UIET TECHFEST CSJMU</p>
                     </div>
-                    
+
                     <div className="space-y-2">
-                        <p className="text-[#00FF9E] font-orbitron text-sm font-bold tracking-widest uppercase">BUILD COMPLETE</p>
-                        <p className="text-[#00FF9E] font-orbitron text-sm font-bold tracking-widest uppercase">DOMINATE</p>
+                        <p className="font-orbitron text-sm font-bold tracking-widest uppercase">
+                            <span className="text-white">BUILD</span> | <span className="text-[#00FF9E]">COMPETE</span> | <span className="text-white">DOMINATE</span>
+                        </p>
                     </div>
 
                     <p className="text-sm text-white/40 leading-relaxed max-w-xs italic">
@@ -72,7 +73,7 @@ const Footer = () => {
 
                 {/* Festival Links */}
                 <div>
-                     <div className="flex items-center gap-3 mb-8">
+                    <div className="flex items-center gap-3 mb-8">
                         <div className="w-1 h-6 bg-[#00FF9E] rounded-full shadow-[0_0_10px_#00FF9E]"></div>
                         <h3 className="text-lg font-orbitron font-bold tracking-[0.1em] text-white">FESTIVAL</h3>
                     </div>
@@ -127,7 +128,7 @@ const Footer = () => {
             </div>
 
             {/* Bottom Footer */}
-            <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
+            <div className="pt-4 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
                 <p className="text-[10px] tracking-[0.2em] font-orbitron text-white/30 uppercase">
                     © 2026 ROBO RUMBLE. ALL RIGHTS RESERVED.
                 </p>

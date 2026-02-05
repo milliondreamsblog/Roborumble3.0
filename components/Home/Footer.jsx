@@ -12,7 +12,7 @@ const Footer = () => {
     { name: 'Events', url: '/events' },
     { name: 'Schedule', url: '/schedule' },
     { name: 'Gallery', url: '/gallery' },
-    { name: 'Register', url: '/dashboard' }, // 👈 Register Link
+    { name: 'Register', url: '/register' }, // 👈 Register Link
   ];
 
   // 2. Define Links for "Festival" Column
@@ -47,8 +47,8 @@ const Footer = () => {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-[#4cd84c] text-sm font-bold tracking-[0.2em] uppercase">
-                Build Complete Dominate
+              <h3 className="text-[#4cd84c] text-sm font-bold tracking-[0.2em] uppercase whitespace-nowrap">
+                Build Compete Dominate
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed">
                 "Engineering the future, one circuit at a time. Join us in the ultimate battle of wits and machines where innovation meets destiny."

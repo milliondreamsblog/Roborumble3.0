@@ -11,13 +11,15 @@ const AboutUs = () => {
 
       <div className="container mx-auto px-6 relative z-10">
 
+
+
         {/* HEADER SECTION - Text changed to White */}
         <div className="text-center mb-12 md:mb-20">
           <h2 className="text-4xl md:text-7xl font-black text-white tracking-[0.2em] uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
             About Us
           </h2>
-          {/* Accent line under About Us */}
-          <div className="h-[2px] w-24 bg-green-500 mx-auto mt-4 shadow-[0_0_10px_#22c55e]"></div>
+          {/* Full-width accent line under About Us - CHIEF PATRON style */}
+          <div className="w-[320px] md:w-[500px] h-[2px] bg-gradient-to-r from-transparent via-[#00FF9E] to-transparent mt-6 mx-auto shadow-[0_0_15px_#00FF9E]"></div>
         </div>
 
         {/* CONTENT GRID: Stacks on mobile, side-by-side on desktop */}
