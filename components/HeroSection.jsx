@@ -1,149 +1,100 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import Link from "next/link"; // Link add kiya taaki Register page par ja sakein
 
-const HeroSection = () => {
-  const [bgStars, setBgStars] = useState([]);
-  const [glowingStars, setGlowingStars] = useState([]);
+import { useEffect, useState } from "react";
+import styles from "./Hero.module.scss";
+import { SlotText } from "./SlotText";
+
+export default function HeroSection({ onComplete }) {
+  const [glitchActive, setGlitchActive] = useState(false);
+  const [subtitleText, setSubtitleText] = useState("");
+  const [subtitleText2, setSubtitleText2] = useState(""); // Second line
+  const [showSubtitle, setShowSubtitle] = useState(false);
+  const [showSubtitle2, setShowSubtitle2] = useState(false); // Second line visibility
 
   useEffect(() => {
-    // 1. DUST STARS
-    const dust = Array.from({ length: 100 }).map((_, i) => ({
-      id: i,
-      top: Math.random() * 100 + "%",
-      left: Math.random() * 100 + "%",
-      size: Math.random() * 2 + "px",
-      opacity: Math.random() * 0.5 + 0.2,
-      duration: Math.random() * 20 + 10,
-    }));
-    setBgStars(dust);
+    const timeoutIds = [];
+    const intervalIds = [];
 
-    // 2. GLOWING STARS
-    const glow = Array.from({ length: 30 }).map((_, i) => ({
-      id: i,
-      top: Math.random() * 100 + "%",
-      left: Math.random() * 100 + "%",
-      size: Math.random() * 3 + 1 + "px",
-      duration: Math.random() * 3 + 2,
-    }));
-    setGlowingStars(glow);
-  }, []);
+    // 1.0s: Type "SYSTEM OVERRIDE"
+    timeoutIds.push(setTimeout(() => {
+      const text1 = "SYSTEM OVERRIDE";
+      let i = 0;
+      setShowSubtitle(true);
+      setSubtitleText("_");
+
+      const int1 = setInterval(() => {
+        setSubtitleText(text1.substring(0, i + 1) + "_");
+        i++;
+        if (i >= text1.length) clearInterval(int1);
+      }, 30); // Slightly slower typing for better pacing
+      intervalIds.push(int1);
+    }, 1000));
+
+    // 2.2s: Type "TAKING YOU TO TERMINAL"
+    timeoutIds.push(setTimeout(() => {
+      const text2 = "TAKING YOU TO TERMINAL";
+      let i = 0;
+      setShowSubtitle2(true);
+      setSubtitleText2("_");
+      setSubtitleText(prev => prev.replace("_", ""));
+
+      const int2 = setInterval(() => {
+        setSubtitleText2(text2.substring(0, i + 1) + "_");
+        i++;
+        if (i >= text2.length) clearInterval(int2);
+      }, 30);
+      intervalIds.push(int2);
+    }, 2200));
+
+    // 4.5s: Complete
+    timeoutIds.push(setTimeout(() => {
+      if (onComplete) onComplete();
+    }, 2800));
+
+    // Random Glitch Effect Logic
+    const triggerGlitch = () => {
+      setGlitchActive(true);
+      setTimeout(() => {
+        setGlitchActive(false);
+      }, Math.random() * 400 + 100);
+      scheduleNext();
+    };
+
+    const scheduleNext = () => {
+      const delay = Math.random() * 3000 + 2000;
+      setTimeout(triggerGlitch, delay);
+    };
+    scheduleNext();
+
+    return () => {
+      timeoutIds.forEach(id => clearTimeout(id));
+      intervalIds.forEach(id => clearInterval(id));
+    };
+  }, [onComplete]);
+
+  const text = "ROBO RUMBLE 3.0";
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-[#01020a] flex flex-col font-sans">
-      
-      {/* LAYER 0: CYBER GRID */}
-      <div
-        className="absolute inset-0 z-0 opacity-[0.15] pointer-events-none"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zM22.344 0L13.858 8.485 15.272 9.9l7.9-7.9h-.828zm5.656 0L19.515 8.485 18.1 9.9l8.9-8.9h1zm5.657 0L33.657 0h-2.828zM39.314 0L27.9 11.415l1.414 1.414L42.142 0h-2.828zM44.97 0L30.728 14.243l1.414 1.414L47.8 0h-2.828zM50.627 0L33.557 17.07l1.414 1.414L53.458 0h-2.83zM56.284 0L36.385 19.9l1.415 1.414L59.11 0h-2.828zM60 0v2.828L57.172 0H60zM0 0v2.828L2.828 0H0zM30 30h1.414L30 28.586V30zm0 2.828L28.586 30H30v2.828zm0-5.657L31.414 30H30v-2.828zm0 8.485L27.172 30H30v5.657zM30 16.97L16.97 30H30v-13.03zm0 26.06L43.03 30H30v13.03zm0-39.09L-9.09 30H30V3.94zm0 52.12L69.09 30H30v26.06zM30 0v60h-1V0h1z' fill='%23164e63' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-        }}
-      />
+    <section className="flex min-h-screen flex-col items-center justify-center relative overflow-hidden">
+      <div className={styles.heroContainer}>
+        <div className={`${styles.glitchText} ${glitchActive ? styles.violent : ''} flex flex-col items-center`}>
+          {/* Mobile: Smaller text, Desktop: Larger text */}
+          <SlotText text="ROBO RUMBLE" className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl text-center px-4" />
+          <SlotText text="3.0" className="text-xl sm:text-2xl md:text-4xl lg:text-5xl text-center px-4 mt-2 font-light tracking-widest" />
+        </div>
 
-      {/* LAYER 1: STARS */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        {bgStars.map((star) => (
-          <motion.div
-            key={`dust-${star.id}`}
-            className="absolute bg-slate-500 rounded-full"
-            style={{
-              top: star.top,
-              left: star.left,
-              width: star.size,
-              height: star.size,
-              opacity: star.opacity,
-            }}
-            animate={{ y: [0, -20] }}
-            transition={{ duration: star.duration, repeat: Infinity, ease: "linear" }}
-          />
-        ))}
-        {glowingStars.map((star) => (
-          <motion.div
-            key={`glow-${star.id}`}
-            className="absolute bg-white rounded-full"
-            style={{
-              top: star.top,
-              left: star.left,
-              width: star.size,
-              height: star.size,
-              boxShadow: "0 0 6px 2px rgba(255, 255, 255, 0.5)",
-            }}
-            animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
-            transition={{
-              duration: star.duration,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+        {/* Subtitle Line 1 */}
+        <div className="flex flex-col items-center mt-4 space-y-2 px-4">
+          <p className={`text-sm sm:text-lg md:text-xl lg:text-2xl font-mono tracking-widest ${styles.subtitle} ${showSubtitle ? '' : 'opacity-0'} text-center`}>
+            {subtitleText}
+          </p>
 
-      {/* LAYER 2: HERO SECTION CONTENT */}
-      <div className="relative z-10 w-full flex-grow flex flex-col items-center justify-center pt-24 md:pt-32">
-        
-        {/* ROBOT IMAGE */}
-        <motion.div
-          className="relative w-full flex justify-center" 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1, y: [-10, 10, -10] }} 
-          transition={{ 
-            opacity: { duration: 1 },
-            scale: { duration: 1 },
-            y: { duration: 6, repeat: Infinity, ease: "easeInOut" } 
-          }}
-        >
-          <img
-            src="/uiettechfest.jpeg"
-            alt="Robo Theme"
-            className="h-[40vh] md:h-[55vh] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,200,255,0.2)]"
-            style={{
-              maskImage: "linear-gradient(to bottom, black 50%, transparent 95%)",
-              WebkitMaskImage: "linear-gradient(to bottom, black 50%, transparent 95%)",
-            }}
-          />
-        </motion.div>
-
-        {/* TITLE & PRIZE POOL */}
-        <div className="flex flex-col items-center gap-6 pb-20 -mt-10 md:-mt-14 relative z-20">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-white to-green-400 font-black tracking-widest text-center uppercase"
-            style={{
-              fontSize: "clamp(32px, 5vw, 64px)",
-              filter: "drop-shadow(0 0 20px rgba(34, 255, 200, 0.5))",
-            }}
-          >
-            ROBO RUMBLE'26
-          </motion.h1>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            whileHover={{ scale: 1.05 }}
-            className="relative group cursor-pointer"
-          >
-            <div className="absolute -inset-2 bg-gradient-to-r from-green-500 to-cyan-500 rounded-lg blur-2xl opacity-20 group-hover:opacity-50 transition duration-500"></div>
-            <div className="relative px-12 py-4 bg-black/60 backdrop-blur-xl border border-white/10 rounded-lg flex flex-col items-center shadow-lg">
-              <span className="text-cyan-400 text-sm tracking-[0.4em] font-bold uppercase mb-1">
-                Total Prize Pool
-              </span>
-              <span className="text-white text-4xl md:text-5xl font-bold tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
-                ₹ 1,56,000
-              </span>
-            </div>
-          </motion.div>
-
-          {/* REGISTER BUTTON (Added this so users can go to registration page) */}
-          
-
+          {/* Subtitle Line 2 */}
+          <p className={`text-sm sm:text-lg md:text-xl lg:text-2xl font-mono tracking-widest ${styles.subtitle} ${showSubtitle2 ? '' : 'opacity-0'} text-center`}>
+            {subtitleText2}
+          </p>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default HeroSection;
+}

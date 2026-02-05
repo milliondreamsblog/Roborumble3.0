@@ -1,91 +1,197 @@
 "use client";
 
-import React from "react";
-import ThreeDSkull from "./ThreeDSkull";
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link"; // Assuming next/link is used for navigation
+// Icons from lucide-react (standard in many Next.js projects) or just SVGs if not available. 
+// I will use SVGs to be safe and dependency-free.
 
 const HeroSectionNew = () => {
+  const canvasRef = useRef(null);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  // --- MATRIX RAIN EFFECT ---
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*";
+    const fontSize = 14;
+    const columns = width / fontSize;
+    const drops = [];
+
+    for (let x = 0; x < columns; x++) {
+      drops[x] = 1;
+    }
+
+    const draw = () => {
+      // Black with slight opacity for trail effect
+      ctx.fillStyle = "rgba(2, 6, 23, 0.05)";
+      ctx.fillRect(0, 0, width, height);
+
+      // Green text
+      ctx.fillStyle = "#0F0";
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    };
+
+    const interval = setInterval(draw, 33);
+
+    const handleResize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      setWindowSize({ width, height });
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <section className="relative w-full h-screen overflow-hidden bg-[#020617] flex items-center justify-center border-t border-[#FFD700]/20">
+    <section className="relative w-full h-[100dvh] bg-[#020617] overflow-hidden flex flex-col items-center justify-center">
+      {/* 1. Matrix Background */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 z-0 opacity-20 pointer-events-none"
+      />
 
-      {/* --- BACKGROUND ELEMENTS --- */}
+      {/* 2. Vignette/Overlay for better text contrast */}
+      <div className="absolute inset-0 z-0 bg-radial-gradient-vignette opacity-80 pointer-events-none" />
 
-      {/* Star Field (Static & Twinkling) */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute w-full h-full bg-[url('/images/stars.png')] opacity-40 animate-pulse" />
-        {/* Fallback pattern if image missing */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#020617_100%)] opacity-80" />
-      </div>
+      {/* 3. Main Content Container */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center w-full px-4 max-w-7xl mx-auto">
 
-      {/* Grid Floor (Cyberpunk Vibe) */}
-      <div className="absolute bottom-0 w-full h-1/2 bg-[linear-gradient(to_top,#00FF9E10_1px,transparent_1px),linear-gradient(to_right,#00FF9E10_1px,transparent_1px)] bg-[size:40px_40px] [perspective:1000px] [transform:rotateX(60deg)_translateY(200px)] opacity-20" />
+        {/* TOP DECORATION */}
+        <div className="mb-4 flex items-center gap-4 opacity-70">
+          <div className="h-[1px] w-12 md:w-24 bg-red-600"></div>
+          <span className="text-[10px] md:text-xs font-mono font-bold tracking-[0.3em] text-red-500 uppercase">
+            Build Compete Dominate
+          </span>
+          <div className="h-[1px] w-12 md:w-24 bg-red-600"></div>
+        </div>
 
-      {/* --- OVERLAY UI (Techfest Style - Pixel Perfect) --- */}
+        {/* MAIN HEADING */}
+        <div className="flex flex-col items-center leading-none select-none">
+          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-black text-white tracking-tighter mix-blend-screen drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+            ROBO
+          </h1>
+          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-black text-white tracking-tighter mix-blend-screen drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] -mt-2 md:-mt-6">
+            RUMBLE
+          </h1>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 mt-2 tracking-widest drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+            3.0
+          </h2>
+        </div>
 
-      {/* 1. Left Sidebar (Navigation) - Full Height Glass & Robotic */}
-      <div className="absolute left-0 top-0 h-full w-[90px] z-30 hidden md:flex flex-col items-center justify-center gap-8 bg-black/40 backdrop-blur-md border-r border-[#00FF9E]/20 clip-path-slant">
-        {[
-          { icon: "🏠", label: "HOME" },
-          { icon: "📅", label: "EVENTS" },
-          { icon: "📞", label: "CONTACT" },
-          { icon: "👥", label: "TEAM" },
-          { icon: "💎", label: "PATRONS" },
-          { icon: "🛒", label: "STORE" },
-        ].map((item, i) => (
-          <div key={i} className="flex flex-col items-center group cursor-pointer w-full py-2 relative">
-            {/* Robotic Active/Hover Indicator */}
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 group-hover:h-full bg-[#00FF9E] transition-all duration-300 shadow-[0_0_10px_#00FF9E]" />
+        {/* SUBTEXT */}
+        <div className="mt-8 max-w-2xl px-4">
+          <p className="text-gray-400 text-sm md:text-base font-mono leading-relaxed">
+            Where Innovation Meets Competition. Join the ultimate robotics
+            showdown featuring top talent from across the nation. //
+          </p>
+          <p className="text-green-500/80 text-xs md:text-sm font-mono mt-2 animate-pulse">
+            SYSTEM_STATUS: READY
+          </p>
+        </div>
 
-            <div className="w-12 h-12 bg-[#00FF9E]/5 border border-[#00FF9E]/30 flex items-center justify-center transform hover:scale-110 transition-all duration-300 [clip-path:polygon(20%_0%,80%_0%,100%_20%,100%_80%,80%_100%,20%_100%,0%_80%,0%_20%)] group-hover:bg-[#00FF9E] group-hover:text-black">
-              <span className="text-2xl filter drop-shadow-[0_0_5px_rgba(0,255,158,0.8)]">{item.icon}</span>
-            </div>
-            <span className="text-[10px] font-mono font-bold tracking-widest mt-2 text-white/50 group-hover:text-[#00FF9E] transition-colors">{item.label}</span>
-          </div>
-        ))}
-      </div>
+        {/* --- BUTTONS ROW --- */}
+        <div className="mt-12 flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
 
-      {/* 2. Right Sidebar (Socials) - Full Height Glass & Bigger */}
-      <div className="absolute right-0 top-0 h-full w-[100px] z-30 hidden md:flex flex-col items-center justify-center gap-8 bg-black/40 backdrop-blur-md border-l border-[#00FF9E]/20">
-        {["📸", "💼", "▶️", "✖️", "💬", "📱"].map((social, i) => (
-          <div key={i} className="w-14 h-14 rounded-xl border border-white/10 flex items-center justify-center cursor-pointer hover:border-[#00FF9E] hover:bg-[#00FF9E]/10 transition-all duration-300 group hover:rotate-6 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-            <span className="text-white/60 group-hover:text-[#00FF9E] text-2xl filter drop-shadow-[0_0_5px_rgba(0,255,158,0.5)]">{social}</span>
-          </div>
-        ))}
-      </div>
+          {/* Button 1: REGISTER NOW (Red Block) */}
+          <a
+            href="/register"
+            className="group relative w-full md:w-auto flex items-center justify-center gap-3 bg-[#FF003C] text-black font-bold font-mono text-sm md:text-base px-8 py-4 clip-path-slant hover:bg-[#ff3366] transition-all duration-300 min-w-[200px]"
+            style={{ clipPath: "polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)" }}
+          >
+            REGISTER_NOW
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="group-hover:translate-x-1 transition-transform"
+            >
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
 
-      {/* 3. Center Title Block (Floating at Top) */}
-      <div className="absolute top-[8%] left-1/2 -translate-x-1/2 z-20 text-center flex flex-col items-center w-full pointer-events-none">
-        <p className="text-[#00FF9E] text-xs md:text-sm font-semibold tracking-[0.3em] uppercase mb-2 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-          Presents UIET's
-        </p>
-        {/* Custom Font Title */}
-        <h1 className="text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10 italic tracking-tighter filter drop-shadow-[0_0_20px_rgba(0,255,158,0.3)] animate-fade-in-up" style={{ fontFamily: "'Orbitron', sans-serif", animationDelay: "0.2s" }}>
-          ROBO <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFD700] to-[#FFA500]">RUMBLE</span> <span className="text-[#00FF9E] not-italic">3.0</span>
-        </h1>
-        <div className="h-[2px] w-48 bg-gradient-to-r from-transparent via-[#00FF9E] to-transparent my-4" />
-        <p className="text-white/60 text-[10px] md:text-xs font-mono tracking-[0.5em] uppercase animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-          BY UIET KANPUR
-        </p>
-      </div>
+          {/* Button 2: EXPLORE EVENTS (Cyan Hollow) */}
+          <Link
+            href="/events"
+            className="group relative w-auto flex items-center justify-center gap-2 border border-[#00FFFF] text-[#00FFFF] font-mono font-bold text-sm md:text-base px-8 py-4 hover:bg-[#00FFFF]/10 transition-all duration-300 min-w-[200px]"
+            style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
+          >
+            {/* Decoration corners */}
+            <span className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#00FFFF]"></span>
+            <span className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[#00FFFF]"></span>
+            EXPLORE_EVENTS
+          </Link>
 
-      {/* --- MAIN CONTENT --- */}
-      {/* Removed pt-20 to stretch to top */}
-      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
+          {/* Button 3: BROCHURE (Purple Outline) */}
+          <a
+            href="/brochure.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative w-full md:w-auto flex items-center justify-center gap-2 border border-purple-500 text-purple-400 font-mono font-bold text-sm md:text-base px-8 py-4 rounded-md hover:bg-purple-500/10 transition-all duration-300 min-w-[200px]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            BROCHURE.PDF
+          </a>
 
-        {/* 3D WIREFRAME SKULL */}
-        <div className="w-full h-full flex items-center justify-center animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-          <ThreeDSkull />
         </div>
 
       </div>
 
-      {/* Style for animations explicitly defined here if needed, or rely on global/tailwind */}
-      <style jsx>{`
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
-      `}</style>
+      {/* FOOTER DECORATIONS (Optional lines/grid from image) */}
+      <div className="absolute bottom-10 w-full flex justify-between px-10 opacity-30 pointer-events-none hidden md:flex">
+        <div className="h-full flex gap-2">
+          <div className="w-[1px] h-10 bg-white/20"></div>
+          <div className="w-[1px] h-16 bg-white/40"></div>
+          <div className="w-[1px] h-8 bg-white/20"></div>
+        </div>
+
+      </div>
+
     </section>
   );
 };
