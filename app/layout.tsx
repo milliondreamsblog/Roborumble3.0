@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
+import CustomCursor from "@/components/CustomCursor";
 
 export default function RootLayout({
   children,
@@ -29,6 +30,7 @@ export default function RootLayout({
           <link rel="icon" href="/skull.png" />
         </head>
         <body>
+          <CustomCursor />
           <AuthProvider>
             {showNavbar && <Navbar />}
             {children}
