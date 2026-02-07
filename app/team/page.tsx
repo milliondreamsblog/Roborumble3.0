@@ -1,7 +1,8 @@
 "use client";
 
-import Navbar from "../components/Navbar";
-import MatrixBackground from "../components/MatrixBackground";
+import { useState } from "react";
+
+import { SlotText } from "../components/SlotText";
 import Footer from "../components/Footer";
 import Image from "next/image";
 import Link from "next/link";
@@ -257,9 +258,8 @@ const AssetCard = ({ member, delay }: { member: TeamMember; delay: number }) => 
 // --- Main TeamPage ---
 export default function TeamPage() {
   return (
-    <main className="min-h-screen bg-black text-white relative overflow-hidden">
-      <MatrixBackground color="#003B00" text="" />
-      <Navbar />
+    <main className="min-h-screen bg-transparent text-white relative overflow-hidden">
+
 
       <div className="relative z-10 pt-40 pb-20 container mx-auto px-4 md:px-8">
         {/* Header */}
