@@ -431,22 +431,41 @@ export default function Home() {
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-16">
             <Link href="/register" className="w-full md:w-auto">
-              <button className="w-full md:w-auto px-8 py-4 bg-[#FF003C] text-black font-black font-mono tracking-widest hover:bg-white transition-all uppercase flex items-center justify-center gap-2"
-                style={{ clipPath: 'polygon(15% 0, 100% 0, 100% 70%, 85% 100%, 0 100%, 0 30%)' }}>
+              <button
+                className="w-full md:w-auto px-8 py-4 bg-[#FF003C] text-black font-black font-mono tracking-widest hover:bg-white transition-all uppercase flex items-center justify-center gap-2"
+                style={{
+                  clipPath:
+                    "polygon(15% 0, 100% 0, 100% 70%, 85% 100%, 0 100%, 0 30%)",
+                }}
+              >
                 Register_Now <ArrowRight size={20} />
               </button>
             </Link>
 
             <Link href="/events" className="w-full md:w-auto">
-              <button className="w-full md:w-auto px-8 py-4 border border-[#00F0FF] text-[#00F0FF] font-black font-mono tracking-widest hover:bg-[#00F0FF]/10 transition-all uppercase"
-                style={{ clipPath: 'polygon(0 0, 85% 0, 100% 30%, 100% 100%, 15% 100%, 0 70%)' }}>
+              <button
+                className="w-full md:w-auto px-8 py-4 border border-[#00F0FF] text-[#00F0FF] font-black font-mono tracking-widest hover:bg-[#00F0FF]/10 transition-all uppercase"
+                style={{
+                  clipPath:
+                    "polygon(0 0, 85% 0, 100% 30%, 100% 100%, 15% 100%, 0 70%)",
+                }}
+              >
                 Explore_Events
               </button>
             </Link>
 
-            <a href="/brochureroborumble3.o.pdf" download="RoboRumble_Brochure.pdf" className="w-full md:w-auto">
-              <button className="w-full md:w-auto px-8 py-4 border border-[#E661FF] text-[#E661FF] font-black font-mono tracking-widest hover:bg-[#E661FF]/10 transition-all uppercase flex items-center justify-center gap-2"
-                style={{ clipPath: 'polygon(0 15%, 85% 0, 100% 0, 100% 85%, 15% 100%, 0 100%)' }}>
+            <a
+              href="/brochureroborumble3.o.pdf"
+              download="RoboRumble_Brochure.pdf"
+              className="w-full md:w-auto"
+            >
+              <button
+                className="w-full md:w-auto px-8 py-4 border border-[#E661FF] text-[#E661FF] font-black font-mono tracking-widest hover:bg-[#E661FF]/10 transition-all uppercase flex items-center justify-center gap-2"
+                style={{
+                  clipPath:
+                    "polygon(0 15%, 85% 0, 100% 0, 100% 85%, 15% 100%, 0 100%)",
+                }}
+              >
                 <Download size={20} /> Brochure.pdf
               </button>
             </a>
@@ -463,13 +482,18 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="inline-block p-8 bg-zinc-950/50 border border-white/5 backdrop-blur-md mb-16"
-            style={{ clipPath: 'polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)' }}>
-            <p className="text-[#FF003C] text-xs mb-4 uppercase tracking-[0.5em] font-black">Deployment Countdown</p>
+          <div
+            className="inline-block p-8 bg-zinc-950/50 border border-white/5 backdrop-blur-md mb-16"
+            style={{
+              clipPath:
+                "polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)",
+            }}
+          >
+            <p className="text-[#FF003C] text-xs mb-4 uppercase tracking-[0.5em] font-black">
+              Deployment Countdown
+            </p>
             <Countdown targetDate="2026-03-09T09:00:00" />
           </div>
-
-
         </div>
       </section>
 
@@ -1009,12 +1033,26 @@ export default function Home() {
       <Footer />
 
       <style jsx global>{`
-        @keyframes scan { 0% { top: -20%; } 100% { top: 120%; } }
-        .animate-scan { position: absolute; animation: scan 2.5s linear infinite; }
-        
+        @keyframes scan {
+          0% {
+            top: -20%;
+          }
+          100% {
+            top: 120%;
+          }
+        }
+        .animate-scan {
+          position: absolute;
+          animation: scan 2.5s linear infinite;
+        }
+
         @keyframes infinite-scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
         }
         .animate-infinite-scroll {
           animation: infinite-scroll 30s linear infinite;
@@ -1075,40 +1113,94 @@ export default function Home() {
         
         .glitch-container { animation: glitch-skew 3s infinite; }
         @keyframes glitch-skew {
-          0%, 100% { transform: skew(0deg); }
-          20% { transform: skew(0deg); }
-          21% { transform: skew(-0.8deg); }
-          22% { transform: skew(0deg); }
-          60% { transform: skew(0deg); }
-          61% { transform: skew(0.8deg); }
-          62% { transform: skew(0deg); }
+          0%,
+          100% {
+            transform: skew(0deg);
+          }
+          20% {
+            transform: skew(0deg);
+          }
+          21% {
+            transform: skew(-0.8deg);
+          }
+          22% {
+            transform: skew(0deg);
+          }
+          60% {
+            transform: skew(0deg);
+          }
+          61% {
+            transform: skew(0.8deg);
+          }
+          62% {
+            transform: skew(0deg);
+          }
         }
 
-        .glitch-layer-red { animation: glitch-clip-red 2.5s infinite; }
-        .glitch-layer-cyan { animation: glitch-clip-cyan 2s infinite; }
+        .glitch-layer-red {
+          animation: glitch-clip-red 2.5s infinite;
+        }
+        .glitch-layer-cyan {
+          animation: glitch-clip-cyan 2s infinite;
+        }
 
         @keyframes glitch-clip-red {
-          0%, 100% { clip-path: inset(0 0 0 0); }
-          11% { clip-path: inset(22% 0 58% 0); }
-          12% { clip-path: inset(0 0 0 0); }
-          51% { clip-path: inset(42% 0 28% 0); }
-          52% { clip-path: inset(0 0 0 0); }
+          0%,
+          100% {
+            clip-path: inset(0 0 0 0);
+          }
+          11% {
+            clip-path: inset(22% 0 58% 0);
+          }
+          12% {
+            clip-path: inset(0 0 0 0);
+          }
+          51% {
+            clip-path: inset(42% 0 28% 0);
+          }
+          52% {
+            clip-path: inset(0 0 0 0);
+          }
         }
 
         @keyframes glitch-clip-cyan {
-          0%, 100% { clip-path: inset(0 0 0 0); }
-          16% { clip-path: inset(32% 0 48% 0); }
-          17% { clip-path: inset(0 0 0 0); }
-          66% { clip-path: inset(12% 0 68% 0); }
-          67% { clip-path: inset(0 0 0 0); }
+          0%,
+          100% {
+            clip-path: inset(0 0 0 0);
+          }
+          16% {
+            clip-path: inset(32% 0 48% 0);
+          }
+          17% {
+            clip-path: inset(0 0 0 0);
+          }
+          66% {
+            clip-path: inset(12% 0 68% 0);
+          }
+          67% {
+            clip-path: inset(0 0 0 0);
+          }
         }
-        
+
         @keyframes glitch-entry {
-          0% { opacity: 0; transform: scale(0.98) skewX(-5deg); filter: brightness(2); }
-          50% { opacity: 1; transform: scale(1.02) skewX(2deg); filter: brightness(1.2); }
-          100% { transform: scale(1) skewX(0); filter: brightness(1); }
+          0% {
+            opacity: 0;
+            transform: scale(0.98) skewX(-5deg);
+            filter: brightness(2);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.02) skewX(2deg);
+            filter: brightness(1.2);
+          }
+          100% {
+            transform: scale(1) skewX(0);
+            filter: brightness(1);
+          }
         }
-        .animate-glitch-entry { animation: glitch-entry 0.4s ease-out forwards; }
+        .animate-glitch-entry {
+          animation: glitch-entry 0.4s ease-out forwards;
+        }
       `}</style>
     </main>
   );
