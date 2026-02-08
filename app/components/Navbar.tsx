@@ -172,10 +172,10 @@ const Navbar = () => {
             <div className="w-full h-[56px] animate-pulse bg-white/5 border border-[rgba(255,255,255,0.08)] rounded" />
           ) : user ? (
             <Link href="/account" onClick={closeSidebar}>
-              <button className="w-full bg-[#00E5FF]/10 border border-[#00E5FF] text-[#00E5FF] font-bold py-4 px-6 flex items-center justify-center gap-2 hover:bg-[#00E5FF]/20 transition-all font-mono tracking-wider text-sm shadow-[0_0_10px_rgba(0,229,255,0.15)]">
-                <User size={16} />
-                {user.name.toUpperCase()}
-              </button>
+               <button className="w-full bg-[#00E5FF]/10 border border-[#00E5FF] text-[#00E5FF] font-bold py-4 px-6 flex items-center justify-center gap-2 hover:bg-[#00E5FF]/20 transition-all font-mono tracking-widest text-sm shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+                  <User size={16} />
+                  {(user.name || "User").toUpperCase()}
+               </button>
             </Link>
           ) : (
             <div className="flex flex-col gap-3">
