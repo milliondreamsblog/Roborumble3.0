@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { UserButton, SignOutButton } from "@clerk/nextjs";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import {
     Home,
     Users,
@@ -14,10 +15,13 @@ import {
     LogOut,
     Menu,
     X,
-    Zap,
     ChevronRight,
+    ArrowLeft,
+    Calendar,
+    ShoppingCart,
 } from "lucide-react";
 import NotificationBell from "@/app/components/NotificationBell";
+import CartSidebar from "@/app/components/CartSidebar";
 
 const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home, color: "cyan" },
@@ -33,6 +37,8 @@ export default function DashboardLayout({
 }) {
     const pathname = usePathname();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [cartOpen, setCartOpen] = useState(false);
+    const [cartCount, setCartCount] = useState(0);
 
     const colorClasses = {
         cyan: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/30 text-cyan-400",
@@ -80,20 +86,38 @@ export default function DashboardLayout({
                 `}
             >
                 {/* Logo Section */}
-                <div className="p-5 border-b border-gray-800/50">
+                <Link href="/" className="group p-5 border-b border-gray-800/50 block hover:bg-white/5 transition-colors">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-cyan-500/20 rounded-xl">
-                            <Zap className="text-cyan-400" size={22} />
+                        <div className="relative w-10 h-10 flex items-center justify-center bg-cyan-500/10 rounded-xl overflow-hidden">
+                            <Image
+                                src="/skull-1.png"
+                                alt="Robo Rumble Logo"
+                                width={32}
+                                height={32}
+                                className="object-contain"
+                            />
                         </div>
                         <div>
-                            <h1 className="text-lg font-bold text-white tracking-tight">
+                            <h1 className="text-lg font-bold text-white group-hover:text-[#00E5FF] tracking-tight leading-tight transition-all duration-300">
                                 Robo Rumble
                             </h1>
-                            <p className="text-xs text-cyan-400 font-medium tracking-widest uppercase">
+                            <p className="text-[10px] text-cyan-400 font-medium tracking-widest uppercase">
                                 Dashboard
                             </p>
                         </div>
                     </div>
+                </Link>
+
+                {/* Back to Home Link (Pinned Top) */}
+                <div className="px-3 py-2 border-b border-gray-800/50">
+                    <Link
+                        href="/"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-gray-800/50 hover:text-white transition-all duration-200"
+                    >
+                        <ArrowLeft size={18} />
+                        <span className="font-medium text-sm">Back to Home</span>
+                    </Link>
                 </div>
 
                 {/* Navigation */}
@@ -127,17 +151,11 @@ export default function DashboardLayout({
 
                 {/* Bottom Section */}
                 <div className="p-3 border-t border-gray-800/50 space-y-2">
-                    {/* Notification Bell */}
-                    <div className="flex items-center justify-between p-2">
-                        <span className="text-gray-500 text-xs font-medium uppercase tracking-wider">Notifications</span>
-                        <NotificationBell />
-                    </div>
-
                     {/* User Profile */}
                     <div className="flex items-center gap-3 p-3 bg-gray-800/30 rounded-xl">
                         <UserButton afterSignOutUrl="/" />
                         <Link
-                            href="/onboarding"
+                            href="/dashboard/profile"
                             onClick={() => setMobileMenuOpen(false)}
                             className="flex-1 text-gray-400 hover:text-white text-sm flex items-center gap-2 transition-colors"
                         >
@@ -154,23 +172,56 @@ export default function DashboardLayout({
                         </button>
                     </SignOutButton>
 
-                    {/* Back to Home Link */}
-                    <Link
-                        href="/home"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center justify-center gap-2 px-4 py-2 text-gray-500 hover:text-gray-300 text-xs transition-colors"
-                    >
-                        ← Back to Home
-                    </Link>
                 </div>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 min-h-screen overflow-auto md:ml-64">
+            <main className="flex-1 min-h-screen overflow-auto md:ml-64 relative">
+                {/* Fixed Action Icons - positioned at top right, same level as page headers */}
+                <div className="fixed top-4 right-4 md:right-6 lg:right-8 z-40 flex items-center gap-2">
+                    {/* Events/Schedule Button */}
+                    <Link href="/dashboard/events">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="relative p-2.5 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-xl border border-yellow-500/30 backdrop-blur-sm transition-all group"
+                        >
+                            <Calendar size={18} className="text-yellow-400" />
+                        </motion.button>
+                    </Link>
+
+                    {/* Notifications Bell */}
+                    <NotificationBell />
+
+                    {/* Cart Button */}
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setCartOpen(true)}
+                        className="relative p-2.5 bg-gray-800/80 hover:bg-gray-700/80 rounded-xl border border-gray-700/50 backdrop-blur-sm transition-all group"
+                    >
+                        <ShoppingCart size={18} className="text-gray-400 group-hover:text-cyan-400 transition-colors" />
+                        {cartCount > 0 && (
+                            <span className="absolute -top-1 -right-1 w-5 h-5 bg-cyan-500 text-black text-[10px] font-black rounded-full flex items-center justify-center">
+                                {cartCount > 9 ? "9+" : cartCount}
+                            </span>
+                        )}
+                    </motion.button>
+                </div>
+
+                {/* Page Content */}
                 <div className="p-4 md:p-6 lg:p-8">
                     {children}
                 </div>
             </main>
+
+            {/* Cart Sidebar */}
+            <CartSidebar
+                isOpen={cartOpen}
+                onClose={() => setCartOpen(false)}
+                onCartUpdate={(count) => setCartCount(count)}
+            />
         </div>
     );
 }
+
