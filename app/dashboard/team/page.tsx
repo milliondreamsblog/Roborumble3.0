@@ -161,6 +161,7 @@ export default function TeamPage() {
     const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([]);
     const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
     const [profileId, setProfileId] = useState<string>("");
+    const [hasPaidRegistration, setHasPaidRegistration] = useState(false);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
 
@@ -197,6 +198,7 @@ export default function TeamPage() {
             setTeam(data.team || null);
             setInvitations(data.invitations || []);
             setProfileId(data.profileId || "");
+            setHasPaidRegistration(data.hasPaidRegistration || false);
 
             // If user has no team, fetch available teams
             if (!data.team) {
@@ -549,14 +551,14 @@ export default function TeamPage() {
                                             <span>{team.members?.length || 0}/50 Members</span>
                                         </p>
                                     </div>
-                                    {isLeader && team.hasPaidRegistration && (
+                                    {isLeader && hasPaidRegistration && (
                                         <div className="flex items-center gap-2 text-yellow-400 text-sm bg-yellow-400/10 px-3 py-1.5 rounded-lg border border-yellow-400/20">
                                             <AlertCircle size={14} />
                                             <span>Cannot disband paid team</span>
                                         </div>
                                     )}
 
-                                    {(!isLeader || !team.hasPaidRegistration) && (
+                                    {(!isLeader || !hasPaidRegistration) && (
                                         <motion.button
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
