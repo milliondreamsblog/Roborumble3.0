@@ -69,6 +69,15 @@ export async function POST(req: Request) {
             // Check if Team already registered
             const existingReg = await Registration.findOne({ teamId, eventId: event._id });
             if (existingReg) {
+                if (existingReg.paymentStatus === 'initiated') {
+                    return NextResponse.json({
+                        message: "Registration already initiated. Proceed to payment.",
+                        registrationId: existingReg._id,
+                        eventId,
+                        eventTitle: event.title,
+                        fees: event.fees
+                    }, { status: 200 });
+                }
                 return NextResponse.json({ error: "Team already registered for this event" }, { status: 400 });
             }
 
@@ -115,8 +124,25 @@ export async function POST(req: Request) {
         // --- INDIVIDUAL REGISTRATION FLOW (Fallback) ---
         // Check if already registered
         const registeredEvents = profile.registeredEvents || [];
-        if (registeredEvents.includes(eventId)) {
-            return NextResponse.json({ message: "Already registered for this event" }, { status: 200 });
+        // Start check
+        const existingIndivReg = await Registration.findOne({
+            eventId: event._id,
+            selectedMembers: profileId
+        });
+
+        if (existingIndivReg) {
+             if (existingIndivReg.paymentStatus === 'initiated') {
+                return NextResponse.json({
+                    message: "Registration already initiated. Proceed to payment.",
+                    registrationId: existingIndivReg._id,
+                    eventId,
+                    eventTitle: event.title,
+                    fees: event.fees
+                }, { status: 200 });
+            }
+            if (registeredEvents.includes(eventId)) {
+                 return NextResponse.json({ message: "Already registered for this event" }, { status: 200 });
+            }
         }
 
         // Check max registrations

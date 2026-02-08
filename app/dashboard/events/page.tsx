@@ -51,7 +51,7 @@ interface EventData {
 
 interface RegistrationStatus {
   eventId: string;
-  status: "registered" | "paid" | "pending" | "manual_verified";
+  status: "registered" | "paid" | "pending" | "manual_verified" | "manual_verification_pending";
 }
 
 // --- Icons Mapping ---
@@ -268,7 +268,7 @@ const HorizontalEventCard = ({
               >
                 <CheckCircle size={14} /> Registered
               </button>
-            ) : registration?.status === "manual_verified" ? (
+            ) : ["manual_verified", "manual_verification_pending"].includes(registration?.status || "") ? (
               <button
                 disabled
                 className="w-full px-4 py-2 bg-yellow-500/10 border border-yellow-500/50 text-yellow-500 font-bold font-mono text-xs rounded-lg uppercase flex items-center justify-center gap-2 cursor-default"
@@ -601,6 +601,9 @@ export default function DashboardEventsPage() {
       setShowPayment(false);
       setActiveEvent(null);
       await fetchRegistrationStatus();
+      
+      // Scroll to top to show message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err: any) {
       throw new Error(err.message || "Failed to submit payment details");
     }
@@ -643,8 +646,17 @@ export default function DashboardEventsPage() {
               {filter}
             </button>
           ))}
-          <button className="p-2 bg-[#eab308] rounded-lg text-black hover:bg-[#eab308]/90 transition-all ml-2">
-            <Calendar size={16} />
+          <button
+            onClick={() => {
+              setLoading(true);
+              fetchEvents();
+              fetchRegistrationStatus();
+              fetchTeamData();
+            }}
+            className="p-2 bg-[#00F0FF]/10 border border-[#00F0FF]/30 rounded-lg text-[#00F0FF] hover:bg-[#00F0FF]/20 transition-all ml-2"
+            title="Refresh Events"
+          >
+            <div className={loading ? "animate-spin" : ""}>⟳</div>
           </button>
         </div>
       </div>

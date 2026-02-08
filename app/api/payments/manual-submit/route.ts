@@ -78,7 +78,7 @@ export async function POST(request: Request) {
         }
 
         // Update the registration
-        registration.paymentStatus = "manual_verified"; // OR "verification_pending" if we want an admin step. 
+        registration.paymentStatus = "manual_verification_pending"; 
         // Plan said: "manual_verification_pending" or use "manual_verified" as the status in schema enum. 
         // Schema enum has "manual_verified". Let's use that but maybe we should interpret it as "pending verification".
         // Actually schema has: "initiated", "pending", "paid", "failed", "refunded", "manual_verified".

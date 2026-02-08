@@ -47,6 +47,14 @@ export default function AdminDashboard() {
   const [message, setMessage] = useState("");
   const router = useRouter();
 
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    registrationId: string;
+    action: "verify" | "reject";
+  } | null>(null);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   useEffect(() => {
     checkAdminAuth();
   }, []);
@@ -82,6 +90,7 @@ export default function AdminDashboard() {
 
   async function fetchRegistrations() {
     if (!user) return;
+    setIsRefreshing(true);
     try {
       const params = new URLSearchParams({
         ...(statusFilter !== "all" && { status: statusFilter }),
@@ -101,16 +110,22 @@ export default function AdminDashboard() {
       setMessage("Failed to fetch registrations");
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
   }
 
-  async function verifyPayment(
-    registrationId: string,
-    action: "verify" | "reject",
-  ) {
+  // Action 1: Open Dialog
+  function verifyPayment(registrationId: string, action: "verify" | "reject") {
+    setConfirmDialog({ isOpen: true, registrationId, action });
+  }
+
+  // Action 2: Execute after confirmation
+  async function executeVerify() {
+    if (!confirmDialog) return;
+
     try {
       const notes =
-        action === "reject"
+        confirmDialog.action === "reject"
           ? window.prompt("Reason for rejection:")
           : undefined;
 
@@ -118,8 +133,8 @@ export default function AdminDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          registrationId,
-          action,
+          registrationId: confirmDialog.registrationId,
+          action: confirmDialog.action,
           notes,
         }),
       });
@@ -129,6 +144,8 @@ export default function AdminDashboard() {
       fetchRegistrations();
     } catch (e) {
       console.error(e);
+    } finally {
+      setConfirmDialog(null);
     }
   }
 
@@ -139,7 +156,9 @@ export default function AdminDashboard() {
       ["paid", "manual_verified"].includes(r.paymentStatus),
     ).length,
     pendingCount: registrations.filter((r) =>
-      ["initiated", "pending"].includes(r.paymentStatus),
+      ["initiated", "pending", "manual_verification_pending"].includes(
+        r.paymentStatus,
+      ),
     ).length,
     totalRevenue: registrations
       .filter((r) => ["paid", "manual_verified"].includes(r.paymentStatus))
@@ -150,17 +169,25 @@ export default function AdminDashboard() {
     return <div className="text-white p-8">Loading admin panel...</div>;
 
   return (
-    <div className="min-h-screen bg-[#020617] p-8">
+    <div className="min-h-screen bg-[#020617] p-8 relative">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-white flex items-center gap-3">
           <LayoutDashboard className="text-cyan-400" /> Admin Dashboard
         </h1>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 font-mono text-sm uppercase"
-        >
-          <LogOut size={16} /> Logout
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={fetchRegistrations}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 font-mono text-sm uppercase transition-all"
+          >
+            <div className={isRefreshing ? "animate-spin" : ""}>⟳</div> Refresh
+          </button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 font-mono text-sm uppercase"
+          >
+            <LogOut size={16} /> Logout
+          </button>
+        </div>
       </div>
 
       {message && (
@@ -208,6 +235,9 @@ export default function AdminDashboard() {
           >
             <option value="all">All Statuses</option>
             <option value="paid">Paid</option>
+            <option value="manual_verification_pending">
+              Verification Pending
+            </option>
             <option value="manual_verified">Manually Verified</option>
             <option value="initiated">Initiated</option>
             <option value="pending">Pending</option>
@@ -269,7 +299,7 @@ export default function AdminDashboard() {
                         rel="noopener noreferrer"
                         className="text-cyan-400 hover:underline text-sm flex items-center gap-1"
                       >
-                         View Proof
+                        View Proof
                       </a>
                     ) : (
                       <span className="text-gray-600 text-sm">N/A</span>
@@ -284,9 +314,12 @@ export default function AdminDashboard() {
                     <StatusBadge status={reg.paymentStatus} />
                   </td>
                   <td className="px-4 py-4">
-                    {["initiated", "pending", "failed"].includes(
-                      reg.paymentStatus,
-                    ) && (
+                    {[
+                      "initiated",
+                      "pending",
+                      "failed",
+                      "manual_verification_pending",
+                    ].includes(reg.paymentStatus) && (
                       <div className="flex gap-2">
                         <button
                           onClick={() => verifyPayment(reg._id, "verify")}
@@ -317,6 +350,44 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {/* Confirmation Dialog */}
+      {confirmDialog && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-md w-full shadow-2xl">
+            <h3 className="text-xl font-bold text-white mb-2">
+              Confirm{" "}
+              {confirmDialog.action === "verify" ? "Approval" : "Rejection"}
+            </h3>
+            <p className="text-gray-400 mb-6">
+              Are you sure you want to <strong>{confirmDialog.action}</strong>{" "}
+              this registration?
+              {confirmDialog.action === "verify"
+                ? " This will mark the payment as paid and generate a QR code for the user."
+                : " This will reject the payment proof."}
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setConfirmDialog(null)}
+                className="px-4 py-2 bg-slate-800 text-white rounded hover:bg-slate-700 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={executeVerify}
+                className={`px-4 py-2 text-white rounded font-bold transition-colors ${
+                  confirmDialog.action === "verify"
+                    ? "bg-green-600 hover:bg-green-500"
+                    : "bg-red-600 hover:bg-red-500"
+                }`}
+              >
+                Confirm{" "}
+                {confirmDialog.action === "verify" ? "Approve" : "Reject"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -358,6 +429,10 @@ function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { color: string; bg: string }> = {
     paid: { color: "text-green-400", bg: "bg-green-500/10" },
     manual_verified: { color: "text-green-400", bg: "bg-green-500/10" },
+    manual_verification_pending: {
+      color: "text-orange-400",
+      bg: "bg-orange-500/10",
+    }, // New status
     initiated: { color: "text-yellow-400", bg: "bg-yellow-500/10" },
     pending: { color: "text-yellow-400", bg: "bg-yellow-500/10" },
     failed: { color: "text-red-400", bg: "bg-red-500/10" },
@@ -370,7 +445,7 @@ function StatusBadge({ status }: { status: string }) {
     <span
       className={`px-3 py-1 rounded-full text-xs font-medium ${bg} ${color}`}
     >
-      {status.replace("_", " ").toUpperCase()}
+      {status.replace(/_/g, " ").toUpperCase()}
     </span>
   );
 }
