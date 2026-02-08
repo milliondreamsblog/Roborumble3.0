@@ -45,10 +45,10 @@ const statusConfig: Record<
     border: "border-green-500/50",
   },
   manual_verified: {
-    icon: CheckCircle,
-    color: "text-green-400",
-    bg: "bg-green-500/10",
-    border: "border-green-500/50",
+    icon: Clock,
+    color: "text-yellow-400",
+    bg: "bg-yellow-500/10",
+    border: "border-yellow-500/50",
   },
   initiated: {
     icon: Clock,
@@ -212,9 +212,8 @@ export default function RegistrationsPage() {
             const isPending =
               reg.paymentStatus === "initiated" ||
               reg.paymentStatus === "pending";
-            const isPaid =
-              reg.paymentStatus === "paid" ||
-              reg.paymentStatus === "manual_verified";
+            const isManualVerified = reg.paymentStatus === "manual_verified";
+            const isPaid = reg.paymentStatus === "paid";
 
             return (
               <div
@@ -258,7 +257,7 @@ export default function RegistrationsPage() {
                       {reg.paymentStatus.replace("_", " ").toUpperCase()}
                     </span>
                     <div className="text-right">
-                      <p className="text-zinc-500 text-[10px] font-mono uppercase">
+                      <p className="text-zinc-500 text-xs font-mono uppercase">
                         Entry Fee
                       </p>
                       <p className="text-xl font-black text-white font-mono">
@@ -273,6 +272,14 @@ export default function RegistrationsPage() {
                         className="px-4 py-2 bg-[#00F0FF] text-black font-black font-mono text-xs rounded-lg uppercase hover:bg-white transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(0,240,255,0.3)]"
                       >
                         <CreditCard size={14} /> Pay Now
+                      </button>
+                    )}
+                    {isManualVerified && (
+                      <button
+                        disabled
+                        className="px-4 py-2 bg-yellow-500/10 border border-yellow-500/50 text-yellow-500 font-bold font-mono text-xs rounded-lg uppercase flex items-center gap-2 cursor-default"
+                      >
+                        <Clock size={14} /> Verification Pending
                       </button>
                     )}
                     {isPaid && (

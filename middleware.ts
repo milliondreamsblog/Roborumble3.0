@@ -18,6 +18,10 @@ const isPublicRoute = createRouteMatcher([
     "/about(.*)",
     "/login(.*)",
     "/register(.*)",
+    "/api/uploadthing(.*)", // UploadThing callback
+    "/admin(.*)",      // Custom Admin Auth
+    "/api/admin(.*)",  // Custom Admin API
+    "/api/auth(.*)",   // Custom Auth API
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

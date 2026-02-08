@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import connectDB from "@/lib/mongodb";
 import Registration from "@/app/models/Registration";
+import "@/app/models/Event"; // Ensure Event model is registered
 
 // Middleware-like check for admin session
 async function isAdmin() {

@@ -23,6 +23,8 @@ export interface IRegistration extends Document {
     amountExpected?: number;
     amountPaid?: number;
     currency: string;
+    screenshotUrl?: string; // URL of the uploaded screenshot
+    userTransactionId?: string; // Transaction ID entered by the user
     paymentAttempts: PaymentAttempt[];
     manualVerification?: ManualVerification;
     createdAt: Date;
@@ -69,6 +71,10 @@ const RegistrationSchema = new Schema<IRegistration>(
         amountExpected: Number,
         amountPaid: Number,
         currency: { type: String, default: "INR" },
+
+        // Manual Payment Details
+        screenshotUrl: String,
+        userTransactionId: String,
 
         // Audit Trail
         paymentAttempts: [

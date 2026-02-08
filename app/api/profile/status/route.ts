@@ -25,9 +25,35 @@ export async function GET() {
             });
         }
 
+        const Team = (await import("@/app/models/Team")).default;
+        const teams = await Team.find({ members: profile._id });
+        const teamIds = teams.map((t: any) => t._id);
+
+        const Registration = (await import("@/app/models/Registration")).default;
+        const registrations = await Registration.find({
+            $or: [
+                { teamId: { $in: teamIds } },
+                { selectedMembers: profile._id }
+            ]
+        }).select("eventId paymentStatus");
+
+        const statusMap: Record<string, string> = {};
+        const paidEvents: string[] = [];
+        const registeredEvents: string[] = [];
+
+        registrations.forEach((reg: any) => {
+            const eId = reg.eventId.toString();
+            statusMap[eId] = reg.paymentStatus;
+            registeredEvents.push(eId);
+            if (reg.paymentStatus === 'paid') {
+                paidEvents.push(eId);
+            }
+        });
+
         return NextResponse.json({
-            registeredEvents: profile.registeredEvents || [],
-            paidEvents: profile.paidEvents || [],
+            registeredEvents,
+            paidEvents, // Kept for backward compatibility
+            statusMap,
             onboardingCompleted: profile.onboardingCompleted,
             username: profile.username
         });
