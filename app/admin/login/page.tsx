@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
 
       // Success
       await refetchUser(); // Keeping this if context is shared, but navigation is key
-      router.push("/admin"); // Redirect to admin dashboard root
+      router.push("/admin/dashboard"); // Redirect to admin dashboard root
     } catch (err) {
       setError("Connection failed");
       setIsLoggingIn(false);

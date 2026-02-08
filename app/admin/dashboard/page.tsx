@@ -1,205 +1,376 @@
-
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../../context/AuthContext";
-import MatrixBackground from "../../components/MatrixBackground";
-import { Shield, Check, X, Search, RefreshCw, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  LayoutDashboard,
+  IndianRupee,
+  Users,
+  Trophy,
+  FileCheck,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Filter,
+  LogOut,
+} from "lucide-react";
 
-interface AdminUser {
-    id: number;
+interface RegistrationData {
+  _id: string;
+  eventId?: {
+    title: string;
+    fees: number;
+  };
+  teamId?: {
     name: string;
-    email: string;
-    college: string;
-    paymentStatus: string | null;
-    events: string[] | null;
-    createdAt: string | Date;
-    role: string | null;
+    leaderId?: {
+      username: string;
+      email: string;
+      phone?: string;
+    };
+  };
+  paymentStatus: string;
+  amountExpected?: number;
+  amountPaid?: number;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  screenshotUrl?: string;
+  userTransactionId?: string;
+  createdAt: string;
 }
 
 export default function AdminDashboard() {
-  const { user, loading: authLoading } = useAuth();
-  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const [registrations, setRegistrations] = useState<RegistrationData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [message, setMessage] = useState("");
   const router = useRouter();
 
-  const fetchUsers = async () => {
-      setLoading(true);
-      try {
-          const res = await fetch("/api/admin/users");
-          if (res.ok) {
-              const data = await res.json();
-              setUsers(data.users);
-          } else {
-              // If unauthorized, redirect
-              router.push("/admin/login");
-          }
-      } catch (err) {
-          console.error(err);
-      } finally {
-          setLoading(false);
-      }
-  };
+  useEffect(() => {
+    checkAdminAuth();
+  }, []);
 
   useEffect(() => {
-     if (!authLoading) {
-         if (!user || user.role !== 'ADMIN') {
-             router.push("/admin/login");
-         } else {
-             fetchUsers();
-         }
-     }
-  }, [user, authLoading, router]);
+    if (user) {
+      fetchRegistrations();
+    }
+  }, [user, statusFilter]);
 
-  const togglePayment = async (userId: number, currentStatus: string) => {
-      const newStatus = currentStatus === 'paid' ? 'pending' : 'paid';
-      if(!confirm(`CONFIRM: Change status to ${newStatus.toUpperCase()}?`)) return;
-
-      try {
-          const res = await fetch("/api/admin/payment", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ userId, status: newStatus }),
-          });
-          
-          if(res.ok) {
-              // Optimistic update
-              setUsers(users.map(u => u.id === userId ? { ...u, paymentStatus: newStatus } : u));
-          }
-      } catch(err) {
-          alert("UPDATE_FAILED");
+  async function checkAdminAuth() {
+    try {
+      const res = await fetch("/api/admin/me");
+      if (!res.ok) {
+        router.push("/admin/login");
+        return;
       }
-  };
-
-  const filteredUsers = users.filter(u => 
-      (u.name || "").toLowerCase().includes(filter.toLowerCase()) || 
-      (u.email || "").toLowerCase().includes(filter.toLowerCase()) ||
-      (u.college || "").toLowerCase().includes(filter.toLowerCase())
-  );
-
-  if (authLoading || (loading && users.length === 0)) {
-      return (
-          <div className="min-h-screen bg-black flex items-center justify-center text-[#FF003C] font-mono">
-              LOADING_ADMIN_CONSOLE...
-          </div>
-      );
+      const data = await res.json();
+      setUser(data.user);
+    } catch (e) {
+      router.push("/admin/login");
+    }
   }
 
+  async function handleLogout() {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+      router.push("/admin/login");
+    } catch (e) {
+      console.error("Logout failed", e);
+    }
+  }
+
+  async function fetchRegistrations() {
+    if (!user) return;
+    try {
+      const params = new URLSearchParams({
+        ...(statusFilter !== "all" && { status: statusFilter }),
+      });
+
+      const res = await fetch(`/api/admin/registrations?${params}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage(data.message || "Access denied");
+        return;
+      }
+
+      setRegistrations(data.registrations || []);
+    } catch (e) {
+      console.error(e);
+      setMessage("Failed to fetch registrations");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function verifyPayment(
+    registrationId: string,
+    action: "verify" | "reject",
+  ) {
+    try {
+      const notes =
+        action === "reject"
+          ? window.prompt("Reason for rejection:")
+          : undefined;
+
+      const res = await fetch("/api/admin/verify-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          registrationId,
+          action,
+          notes,
+        }),
+      });
+
+      const data = await res.json();
+      setMessage(data.message);
+      fetchRegistrations();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // Calculate stats
+  const stats = {
+    totalRegistrations: registrations.length,
+    paidCount: registrations.filter((r) =>
+      ["paid", "manual_verified"].includes(r.paymentStatus),
+    ).length,
+    pendingCount: registrations.filter((r) =>
+      ["initiated", "pending"].includes(r.paymentStatus),
+    ).length,
+    totalRevenue: registrations
+      .filter((r) => ["paid", "manual_verified"].includes(r.paymentStatus))
+      .reduce((sum, r) => sum + (r.amountPaid || r.amountExpected || 0), 0),
+  };
+
+  if (loading)
+    return <div className="text-white p-8">Loading admin panel...</div>;
+
   return (
-    <main className="min-h-screen bg-black text-white p-4 md:p-8 font-mono relative">
-      <div className="fixed inset-0 z-0 opacity-20 pointer-events-none">
-          <MatrixBackground color="#FF003C" text="ADMIN" />
+    <div className="min-h-screen bg-[#020617] p-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+          <LayoutDashboard className="text-cyan-400" /> Admin Dashboard
+        </h1>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 font-mono text-sm uppercase"
+        >
+          <LogOut size={16} /> Logout
+        </button>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto space-y-8">
-          {/* Header Removed (Handled by Sidebar) */}
-          <div className="flex justify-between items-end border-b border-[#FF003C]/30 pb-4 mb-6">
-              <div>
-                   <h2 className="text-2xl font-black text-white uppercase tracking-tighter">Mission Overview</h2>
-                   <p className="text-zinc-500 text-xs font-mono uppercase">System Status: ONLINE</p>
-              </div>
-               <button onClick={fetchUsers} className="p-2 border border-zinc-800 hover:border-[#FF003C] hover:text-[#FF003C] transition-colors">
-                  <RefreshCw size={20} />
-              </button>
-          </div>
+      {message && (
+        <div className="bg-cyan-500/10 border border-cyan-500 text-cyan-400 px-4 py-3 rounded-lg mb-6">
+          {message}
+        </div>
+      )}
 
-          {/* Stats Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-[#FF003C]/10 border border-[#FF003C]/30 p-4">
-                  <h3 className="text-zinc-500 text-[10px] uppercase">Total Operatives</h3>
-                  <p className="text-2xl font-bold text-white">{users.filter(u => u.role !== 'ADMIN').length}</p>
-              </div>
-              <div className="bg-green-900/10 border border-green-500/30 p-4">
-                  <h3 className="text-zinc-500 text-[10px] uppercase">Paid / Verified</h3>
-                  <p className="text-2xl font-bold text-green-500">{users.filter(u => u.paymentStatus === 'paid').length}</p>
-              </div>
-              <div className="bg-yellow-900/10 border border-yellow-500/30 p-4">
-                  <h3 className="text-zinc-500 text-[10px] uppercase">Pending Uplinks</h3>
-                  <p className="text-2xl font-bold text-yellow-500">{users.filter(u => u.paymentStatus === 'pending').length}</p>
-              </div>
-               <div className="bg-blue-900/10 border border-blue-500/30 p-4">
-                  <h3 className="text-zinc-500 text-[10px] uppercase">Events Registered</h3>
-                  <p className="text-2xl font-bold text-blue-500">
-                    {users.reduce((acc, curr) => acc + (curr.events?.length || 0), 0)}
-                  </p>
-              </div>
-          </div>
-
-          {/* Search */}
-          <div className="relative">
-              <input 
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                placeholder="SEARCH_DB: NAME / EMAIL / ID"
-                className="w-full bg-black/50 border border-zinc-800 p-4 pl-12 text-sm text-white focus:border-[#FF003C] outline-none uppercase"
-              />
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
-          </div>
-
-          {/* Table */}
-          <div className="overflow-x-auto border border-zinc-800 bg-black/80">
-              <table className="w-full text-left text-xs uppercase whitespace-nowrap">
-                  <thead>
-                      <tr className="bg-zinc-900 text-zinc-500 border-b border-zinc-800">
-                          <th className="p-4">ID</th>
-                          <th className="p-4">Operative</th>
-                          <th className="p-4">College / Base</th>
-                          <th className="p-4">Missions</th>
-                          <th className="p-4">Status</th>
-                          <th className="p-4 text-right">Action</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {filteredUsers.map((u) => (
-                          <tr key={u.id} className="border-b border-zinc-800 hover:bg-zinc-900/50 transition-colors">
-                              <td className="p-4 font-mono text-zinc-600">#{(u.id || "N/A").toString().padStart(4, '0')}</td>
-                              <td className="p-4">
-                                  <div className="font-bold text-white">{u.name}</div>
-                                  <div className="text-zinc-500 lowercase">{u.email}</div>
-                                  {u.role === 'ADMIN' && <span className="text-[#FF003C] text-[9px] font-bold border border-[#FF003C] px-1 ml-1">ADMIN</span>}
-                              </td>
-                              <td className="p-4 text-zinc-400">{u.college}</td>
-                              <td className="p-4">
-                                  <span className="text-[#00F0FF]">{u.events?.length || 0}</span> Active
-                              </td>
-                              <td className="p-4">
-                                  {u.paymentStatus === 'paid' ? (
-                                      <span className="text-green-500 flex items-center gap-1 font-bold">
-                                          <Check size={14} /> PAID
-                                      </span>
-                                  ) : (
-                                      <span className="text-yellow-600 flex items-center gap-1 font-bold">
-                                          PENDING
-                                      </span>
-                                  )}
-                              </td>
-                              <td className="p-4 text-right">
-                                  <button
-                                    onClick={() => togglePayment(u.id, u.paymentStatus || 'pending')} 
-                                    className={`px-3 py-1 font-bold tracking-wider transition-all border ${
-                                        u.paymentStatus === 'paid' 
-                                            ? 'border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white' 
-                                            : 'border-green-500/50 text-green-500 hover:bg-green-500 hover:text-black'
-                                    }`}
-                                  >
-                                      {u.paymentStatus === 'paid' ? "REVOKE" : "APPROVE"}
-                                  </button>
-                              </td>
-                          </tr>
-                      ))}
-                      {filteredUsers.length === 0 && (
-                          <tr>
-                              <td colSpan={6} className="p-8 text-center text-zinc-600">
-                                  NO_MATCHING_RECORDS_FOUND
-                              </td>
-                          </tr>
-                      )}
-                  </tbody>
-              </table>
-          </div>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard
+          icon={FileCheck}
+          label="Total Registrations"
+          value={stats.totalRegistrations}
+          color="cyan"
+        />
+        <StatCard
+          icon={CheckCircle}
+          label="Paid"
+          value={stats.paidCount}
+          color="green"
+        />
+        <StatCard
+          icon={Clock}
+          label="Pending"
+          value={stats.pendingCount}
+          color="yellow"
+        />
+        <StatCard
+          icon={IndianRupee}
+          label="Total Revenue"
+          value={`₹${stats.totalRevenue.toLocaleString()}`}
+          color="emerald"
+        />
       </div>
-    </main>
+
+      {/* Filter */}
+      <div className="bg-gray-800/50 rounded-xl border border-gray-700 p-4 mb-6">
+        <div className="flex items-center gap-4">
+          <Filter size={20} className="text-gray-400" />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg"
+          >
+            <option value="all">All Statuses</option>
+            <option value="paid">Paid</option>
+            <option value="manual_verified">Manually Verified</option>
+            <option value="initiated">Initiated</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Registrations Table */}
+      <div className="bg-gray-800/50 rounded-xl border border-gray-700 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-900">
+              <tr>
+                <th className="text-left text-gray-400 px-4 py-3">Team</th>
+                <th className="text-left text-gray-400 px-4 py-3">Event</th>
+                <th className="text-left text-gray-400 px-4 py-3">Contact</th>
+                <th className="text-left text-gray-400 px-4 py-3">Amount</th>
+                <th className="text-left text-gray-400 px-4 py-3">Proof</th>
+                <th className="text-left text-gray-400 px-4 py-3">Status</th>
+                <th className="text-left text-gray-400 px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-700">
+              {registrations.map((reg) => (
+                <tr key={reg._id} className="hover:bg-gray-800/50">
+                  <td className="px-4 py-4">
+                    <p className="text-white font-medium">
+                      {reg.teamId?.name || "Unknown"}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      {reg.teamId?.leaderId?.username}
+                    </p>
+                  </td>
+                  <td className="px-4 py-4 text-white">
+                    {reg.eventId?.title || "Unknown"}
+                  </td>
+                  <td className="px-4 py-4">
+                    <p className="text-gray-400 text-sm">
+                      {reg.teamId?.leaderId?.email}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      {reg.teamId?.leaderId?.phone}
+                    </p>
+                  </td>
+                  <td className="px-4 py-4">
+                    <p className="text-white">₹{reg.amountExpected || 0}</p>
+                    {reg.amountPaid !== undefined && (
+                      <p className="text-green-400 text-sm">
+                        Paid: ₹{reg.amountPaid}
+                      </p>
+                    )}
+                  </td>
+                  <td className="px-4 py-4">
+                    {reg.screenshotUrl ? (
+                      <a
+                        href={reg.screenshotUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-cyan-400 hover:underline text-sm flex items-center gap-1"
+                      >
+                         View Proof
+                      </a>
+                    ) : (
+                      <span className="text-gray-600 text-sm">N/A</span>
+                    )}
+                    {reg.userTransactionId && (
+                      <p className="text-gray-500 text-xs font-mono mt-1">
+                        ID: {reg.userTransactionId}
+                      </p>
+                    )}
+                  </td>
+                  <td className="px-4 py-4">
+                    <StatusBadge status={reg.paymentStatus} />
+                  </td>
+                  <td className="px-4 py-4">
+                    {["initiated", "pending", "failed"].includes(
+                      reg.paymentStatus,
+                    ) && (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => verifyPayment(reg._id, "verify")}
+                          className="p-2 bg-green-500/10 text-green-400 rounded hover:bg-green-500/20"
+                          title="Verify Payment"
+                        >
+                          <CheckCircle size={18} />
+                        </button>
+                        <button
+                          onClick={() => verifyPayment(reg._id, "reject")}
+                          className="p-2 bg-red-500/10 text-red-400 rounded hover:bg-red-500/20"
+                          title="Reject"
+                        >
+                          <XCircle size={18} />
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {registrations.length === 0 && (
+            <div className="text-center py-12 text-gray-400">
+              No registrations found with the selected filter.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  color,
+}: {
+  icon: typeof IndianRupee;
+  label: string;
+  value: number | string;
+  color: string;
+}) {
+  const colorClasses: Record<string, string> = {
+    cyan: "text-cyan-400 bg-cyan-500/10",
+    green: "text-green-400 bg-green-500/10",
+    yellow: "text-yellow-400 bg-yellow-500/10",
+    emerald: "text-emerald-400 bg-emerald-500/10",
+  };
+
+  return (
+    <div className="bg-gray-800/50 rounded-xl border border-gray-700 p-6">
+      <div className="flex items-center gap-4">
+        <div className={`p-3 rounded-lg ${colorClasses[color]}`}>
+          <Icon size={24} />
+        </div>
+        <div>
+          <p className="text-gray-400 text-sm">{label}</p>
+          <p className="text-2xl font-bold text-white">{value}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const config: Record<string, { color: string; bg: string }> = {
+    paid: { color: "text-green-400", bg: "bg-green-500/10" },
+    manual_verified: { color: "text-green-400", bg: "bg-green-500/10" },
+    initiated: { color: "text-yellow-400", bg: "bg-yellow-500/10" },
+    pending: { color: "text-yellow-400", bg: "bg-yellow-500/10" },
+    failed: { color: "text-red-400", bg: "bg-red-500/10" },
+    refunded: { color: "text-gray-400", bg: "bg-gray-500/10" },
+  };
+
+  const { color, bg } = config[status] || config.pending;
+
+  return (
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-medium ${bg} ${color}`}
+    >
+      {status.replace("_", " ").toUpperCase()}
+    </span>
   );
 }

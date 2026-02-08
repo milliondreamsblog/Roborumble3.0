@@ -34,6 +34,8 @@ interface RegistrationData {
   amountPaid?: number;
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
+  screenshotUrl?: string;
+  userTransactionId?: string;
   createdAt: string;
 }
 
@@ -224,6 +226,7 @@ export default function AdminPage() {
                 <th className="text-left text-gray-400 px-4 py-3">Event</th>
                 <th className="text-left text-gray-400 px-4 py-3">Contact</th>
                 <th className="text-left text-gray-400 px-4 py-3">Amount</th>
+                <th className="text-left text-gray-400 px-4 py-3">Proof</th>
                 <th className="text-left text-gray-400 px-4 py-3">Status</th>
                 <th className="text-left text-gray-400 px-4 py-3">Actions</th>
               </tr>
@@ -255,6 +258,25 @@ export default function AdminPage() {
                     {reg.amountPaid !== undefined && (
                       <p className="text-green-400 text-sm">
                         Paid: ₹{reg.amountPaid}
+                      </p>
+                    )}
+                  </td>
+                  <td className="px-4 py-4">
+                    {reg.screenshotUrl ? (
+                      <a
+                        href={reg.screenshotUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-cyan-400 hover:underline text-sm flex items-center gap-1"
+                      >
+                         View Proof
+                      </a>
+                    ) : (
+                      <span className="text-gray-600 text-sm">N/A</span>
+                    )}
+                    {reg.userTransactionId && (
+                      <p className="text-gray-500 text-xs font-mono mt-1">
+                        ID: {reg.userTransactionId}
                       </p>
                     )}
                   </td>
