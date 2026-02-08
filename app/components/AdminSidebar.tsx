@@ -42,7 +42,6 @@ export default function AdminSidebar() {
     { name: "Users List", icon: Users, href: "/admin/users" },
     { name: "Announcements", icon: Shield, href: "/admin/announcements" },
     { name: "Events", icon: Calendar, href: "/admin/events" },
-    { name: "Settings", icon: Settings, href: "/admin/settings" },
   ];
 
   return (
