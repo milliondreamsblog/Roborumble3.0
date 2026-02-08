@@ -1,37 +1,21 @@
-
-import { Metadata } from 'next';
+"use client";
 import AdminSidebar from "../components/AdminSidebar";
-import { currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import connectToDB from "@/lib/mongodb";
-import Profile from "@/app/models/Profile";
+import { usePathname } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Admin Console | Robo Rumble 3.0",
-  description: "Restricted Access Area",
-};
-
-export default async function AdminLayout({
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await currentUser();
+  const pathname = usePathname();
+  const isLoginPage = pathname === "/admin/login";
 
-  if (!user) {
-    redirect("/sign-in");
-  }
-
-  await connectToDB();
-  const profile = await Profile.findOne({ clerkId: user.id });
-
-  if (!profile || !["admin", "superadmin"].includes(profile.role)) {
-    redirect("/"); 
+  if (isLoginPage) {
+    return <>{children}</>;
   }
 
   return (
     <div className="flex min-h-screen bg-black">
-      <AdminSidebar />
       <AdminSidebar />
       <div className="flex-1 w-full relative overflow-x-hidden md:ml-64">
         {children}
