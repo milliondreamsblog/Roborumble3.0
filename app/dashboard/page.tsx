@@ -442,9 +442,11 @@ export default function DashboardPage() {
                                     </div>
                                     <ul className="space-y-3">
                                         {[
-                                            "All members must belong to the same institution. Cross-institutional teams are not permitted.",
-                                            "A student cannot be a member of more than one team.",
-                                            "Teams must consist of a minimum of 3 and a maximum of 5 members."
+                                            "Profile Completeness: A complete profile (including Name, Username, Mobile, College, and academic details) is mandatory for creating or joining a team.",
+                                            "Unique Team Identity: Every team must have a unique name. Case-insensitive duplicates are not permitted during creation.",
+                                            "Institutional Unity: All members must belong to the same college. Cross-college teams are strictly not permitted.",
+                                            "Team Capacity: Teams can have a maximum of 50 members, though individual event requirements may vary.",
+                                            "Exclusive Membership: A student cannot be a member of more than one team simultaneously."
                                         ].map((rule, i) => (
                                             <li key={i} className="flex gap-3 text-gray-400 text-sm leading-relaxed">
                                                 <span className="text-cyan-500/50">•</span>

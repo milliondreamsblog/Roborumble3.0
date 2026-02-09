@@ -24,6 +24,17 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Profile not found" }, { status: 404 });
         }
 
+        // Check profile completeness
+        const mandatoryFields = ["username", "phone", "college", "city", "state", "degree", "branch", "yearOfStudy"];
+        const isIncomplete = mandatoryFields.some(field => !profile[field as keyof typeof profile]);
+        
+        if (!profile.onboardingCompleted || isIncomplete) {
+            return NextResponse.json(
+                { message: "Incomplete profile. Please fill all details in your profile before requesting to join a team." },
+                { status: 403 }
+            );
+        }
+
         // Check if user is already in a team
         const existingTeam = await Team.findOne({
             $or: [{ leaderId: profile._id }, { members: profile._id }],
@@ -37,9 +48,18 @@ export async function POST(req: Request) {
         }
 
         // Get the team
-        const team = await Team.findById(teamId);
+        const team = await Team.findById(teamId).populate("leaderId", "college");
         if (!team) {
             return NextResponse.json({ message: "Team not found" }, { status: 404 });
+        }
+
+        // Check same-college rule
+        const leader = team.leaderId as any;
+        if (leader.college !== profile.college) {
+            return NextResponse.json(
+                { message: `Cross-college teams are not allowed. This team is for students of ${leader.college}.` },
+                { status: 403 }
+            );
         }
 
         if (team.isLocked) {

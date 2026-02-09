@@ -11,6 +11,11 @@ export interface IProfile extends Document {
     phone?: string;
     college?: string;
     course?: string;
+    city?: string;
+    state?: string;
+    degree?: string;
+    branch?: string;
+    yearOfStudy?: number;
     role: "user" | "admin" | "superadmin";
     interests: string[];
     currentTeamId?: mongoose.Types.ObjectId;
@@ -37,6 +42,11 @@ const ProfileSchema = new Schema<IProfile>(
         phone: String,
         college: String,
         course: String,
+        city: String,
+        state: String,
+        degree: String,
+        branch: String,
+        yearOfStudy: Number,
 
         // Role Management
         role: {

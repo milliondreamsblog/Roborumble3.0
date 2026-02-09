@@ -100,6 +100,25 @@ export async function POST(req: Request) {
             );
         }
 
+        // Check same-college rule
+        if (inviterProfile.college !== inviteeProfile.college) {
+            return NextResponse.json(
+                { message: `Cross-college teams are not allowed. You can only invite students from ${inviterProfile.college}.` },
+                { status: 403 }
+            );
+        }
+
+        // Check search profile completeness for invitee
+        const mandatoryFields = ["username", "phone", "college", "city", "state", "degree", "branch", "yearOfStudy"];
+        const inviteeIncomplete = mandatoryFields.some(field => !inviteeProfile![field as keyof typeof inviteeProfile]);
+        
+        if (!inviteeProfile.onboardingCompleted || inviteeIncomplete) {
+            return NextResponse.json(
+                { message: "This user has an incomplete profile and cannot be invited yet." },
+                { status: 403 }
+            );
+        }
+
         // Check if already invited
         if (inviteeProfile.invitations && inviteeProfile.invitations.some(
             (inv: { toString: () => string }) => inv.toString() === team._id.toString()

@@ -106,6 +106,17 @@ export async function POST(req: Request) {
             );
         }
 
+        // Check profile completeness
+        const mandatoryFields = ["username", "phone", "college", "city", "state", "degree", "branch", "yearOfStudy"];
+        const isIncomplete = mandatoryFields.some(field => !profile[field as keyof typeof profile]);
+        
+        if (!profile.onboardingCompleted || isIncomplete) {
+            return NextResponse.json(
+                { message: "Incomplete profile. Please fill all details in your profile before creating a team." },
+                { status: 403 }
+            );
+        }
+
         // Check if user is already in a team
         const existingTeam = await Team.findOne({
             $or: [{ leaderId: profile._id }, { members: profile._id }],
@@ -118,8 +129,10 @@ export async function POST(req: Request) {
             );
         }
 
-        // Check if team name is taken
-        const nameTaken = await Team.findOne({ name: teamName.trim() });
+        // Check if team name is taken (case-insensitive)
+        const nameTaken = await Team.findOne({ 
+            name: { $regex: new RegExp(`^${teamName.trim()}$`, "i") } 
+        });
         if (nameTaken) {
             return NextResponse.json(
                 { message: "Team name is already taken" },
