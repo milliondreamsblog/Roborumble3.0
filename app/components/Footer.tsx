@@ -4,7 +4,9 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Github,
+  Terminal,
+  Shield,
+  Linkedin,
   Instagram,
   Twitter,
   Linkedin,
@@ -66,23 +68,18 @@ const Footer = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" /><path d="m10 15 5-3-5-3z" /></svg>
               </Link>
               <Link
-                href="#"
-                className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-[#00F0FF] hover:border-[#00F0FF] transition-all"
-              >
-                <Twitter size={20} />
-              </Link>
-              <Link
-                href="https://www.instagram.com/roborumble.3.o?igsh=czh5OTliZ2Z3ODkz"
+                href="https://x.com/roborumble1"
                 target="_blank"
-                className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-[#E661FF] hover:border-[#E661FF] transition-all"
+                className="p-2 border border-white/10 text-zinc-400 hover:text-white hover:border-[#FF003C] transition-all"
               >
                 <Instagram size={20} />
               </Link>
               <Link
-                href="#"
-                className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white transition-all"
+                href="https://www.linkedin.com/company/robo-rumble/"
+                target="_blank"
+                className="p-2 border border-white/10 text-zinc-400 hover:text-white hover:border-[#E661FF] transition-all"
               >
-                <Linkedin size={20} />
+                <Linkedin size={18} />
               </Link>
             </div>
             <p className="text-zinc-600 text-[10px] uppercase tracking-widest mt-2">

@@ -6,7 +6,8 @@ import Profile from "@/app/models/Profile";
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { clerkId, username, bio, phone, college, course, interests } = body;
+        console.log("Onboarding API received body:", JSON.stringify(body, null, 2));
+        const { clerkId, username, phone, college, city, state, degree, branch, yearOfStudy, interests, bio } = body;
 
         // Validation
         if (!clerkId) {
@@ -16,11 +17,24 @@ export async function POST(req: Request) {
             );
         }
 
-        if (!username || !username.trim()) {
-            return NextResponse.json(
-                { message: "Username is required" },
-                { status: 400 }
-            );
+        const mandatoryFields = {
+            username: "Username",
+            phone: "Mobile number",
+            college: "College name",
+            city: "City",
+            state: "State",
+            degree: "Degree",
+            branch: "Branch",
+            yearOfStudy: "Year of study"
+        };
+
+        for (const [field, label] of Object.entries(mandatoryFields)) {
+            if (!body[field] || (typeof body[field] === "string" && !body[field].trim())) {
+                return NextResponse.json(
+                    { message: `${label} is required` },
+                    { status: 400 }
+                );
+            }
         }
 
         if (!interests || interests.length === 0) {
@@ -57,7 +71,11 @@ export async function POST(req: Request) {
                     bio: bio?.trim() || "",
                     phone: phone?.trim() || "",
                     college: college?.trim() || "",
-                    course: course?.trim() || "",
+                    city: city?.trim() || "",
+                    state: state?.trim() || "",
+                    degree: degree?.trim() || "",
+                    branch: branch?.trim() || "",
+                    yearOfStudy: yearOfStudy,
                     interests,
                     onboardingCompleted: true,
                     email: user?.emailAddresses?.[0]?.emailAddress || "",
