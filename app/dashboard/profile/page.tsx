@@ -19,20 +19,20 @@ import {
   Save,
   MapPin,
   GraduationCap,
-    LucideIcon,
-    Heart,
+  LucideIcon,
+  Heart,
 } from "lucide-react";
 
 const AVAILABLE_INTERESTS = [
-    { name: "Robotics", icon: "🤖", color: "from-cyan-500 to-blue-500" },
-    { name: "AI/ML", icon: "🧠", color: "from-purple-500 to-pink-500" },
-    { name: "Web Dev", icon: "🌐", color: "from-blue-500 to-cyan-500" },
-    { name: "App Dev", icon: "📱", color: "from-green-500 to-emerald-500" },
-    { name: "IOT", icon: "🔌", color: "from-orange-500 to-red-500" },
-    { name: "CyberSec", icon: "🔐", color: "from-red-500 to-rose-500" },
-    { name: "UI/UX", icon: "🎨", color: "from-pink-500 to-purple-500" },
-    { name: "Cloud", icon: "☁️", color: "from-sky-500 to-blue-500" },
-    { name: "Blockchain", icon: "⛓️", color: "from-indigo-500 to-blue-500" },
+  { name: "Robotics", icon: "🤖", color: "from-cyan-500 to-blue-500" },
+  { name: "AI/ML", icon: "🧠", color: "from-purple-500 to-pink-500" },
+  { name: "Web Dev", icon: "🌐", color: "from-blue-500 to-cyan-500" },
+  { name: "App Dev", icon: "📱", color: "from-green-500 to-emerald-500" },
+  { name: "IOT", icon: "🔌", color: "from-orange-500 to-red-500" },
+  { name: "CyberSec", icon: "🔐", color: "from-red-500 to-rose-500" },
+  { name: "UI/UX", icon: "🎨", color: "from-pink-500 to-purple-500" },
+  { name: "Cloud", icon: "☁️", color: "from-sky-500 to-blue-500" },
+  { name: "Blockchain", icon: "⛓️", color: "from-indigo-500 to-blue-500" },
 ];
 
 interface UserProfile {
@@ -244,9 +244,9 @@ export default function ProfilePage() {
   const [registrationCount, setRegistrationCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-    const [saving, setSaving] = useState(false);
-    const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-    const [editForm, setEditForm] = useState({
+  const [saving, setSaving] = useState(false);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [editForm, setEditForm] = useState({
     username: "",
     phone: "",
     bio: "",
@@ -274,9 +274,9 @@ export default function ProfilePage() {
 
         if (userRes.ok) {
           const userData = await userRes.json();
-                    setProfile(userData.user);
-                    setSelectedInterests(userData.user?.interests || []);
-                    // Initialize edit form with current values
+          setProfile(userData.user);
+          setSelectedInterests(userData.user?.interests || []);
+          // Initialize edit form with current values
           setEditForm({
             username: userData.user?.username || "",
             phone: userData.user?.phone || "",
@@ -288,6 +288,7 @@ export default function ProfilePage() {
             branch: userData.user?.branch || "",
             yearOfStudy: userData.user?.yearOfStudy?.toString() || "",
           });
+          console.log("Profile data initialized:", userData.user);
         }
         if (teamRes.ok) {
           const teamData = await teamRes.json();
@@ -311,29 +312,33 @@ export default function ProfilePage() {
     setEditForm((prev) => ({ ...prev, [field]: value }));
   };
 
-    const toggleInterest = (interest: string) => {
-        if (!isEditing) return;
-        setSelectedInterests((prev) =>
-            prev.includes(interest) ? prev.filter((i) => i !== interest) : [...prev, interest]
-        );
-    };
+  const toggleInterest = (interest: string) => {
+    if (!isEditing) return;
+    setSelectedInterests((prev) =>
+      prev.includes(interest)
+        ? prev.filter((i) => i !== interest)
+        : [...prev, interest],
+    );
+  };
 
-    const handleSave = async () => {
-        if (!user?.id) return;
-        setSaving(true);
-        setMessage(null);
+  const handleSave = async () => {
+    if (!user?.id) return;
+    setSaving(true);
+    setMessage(null);
 
-        try {
-            const res = await fetch("/api/users", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    clerkId: user.id,
-                    ...editForm,
-                    yearOfStudy: editForm.yearOfStudy ? parseInt(editForm.yearOfStudy) : undefined,
-                    interests: selectedInterests,
-                }),
-            });
+    try {
+      const res = await fetch("/api/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          clerkId: user.id,
+          ...editForm,
+          yearOfStudy: editForm.yearOfStudy
+            ? parseInt(editForm.yearOfStudy)
+            : undefined,
+          interests: selectedInterests,
+        }),
+      });
 
       if (res.ok) {
         const data = await res.json();
@@ -370,11 +375,11 @@ export default function ProfilePage() {
         state: profile.state || "",
         degree: profile.degree || "",
         branch: profile.branch || "",
-                yearOfStudy: profile.yearOfStudy?.toString() || "",
-            });
-            setSelectedInterests(profile.interests || []);
-        }
-    };
+        yearOfStudy: profile.yearOfStudy?.toString() || "",
+      });
+      setSelectedInterests(profile.interests || []);
+    }
+  };
 
   const isTeamLeader = team && profile && team.leaderId === profile._id;
   const memberSince = profile?.createdAt
@@ -501,8 +506,22 @@ export default function ProfilePage() {
                       {profile?.username || user?.fullName || "User"}
                     </h1>
                     {profile?.college && (
-                      <span className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-sm font-medium">
+                      <span className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-sm font-medium border border-cyan-500/20">
                         {profile.college}
+                      </span>
+                    )}
+                    {(profile?.city || profile?.state) && (
+                      <span className="px-3 py-1 rounded-full bg-pink-500/20 text-pink-400 text-sm font-medium border border-pink-500/20">
+                        {[profile.city, profile.state]
+                          .filter(Boolean)
+                          .join(", ")}
+                      </span>
+                    )}
+                    {(profile?.degree || profile?.branch) && (
+                      <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm font-medium border border-purple-500/20">
+                        {[profile.degree, profile.branch]
+                          .filter(Boolean)
+                          .join(" - ")}
                       </span>
                     )}
                   </div>
@@ -532,6 +551,14 @@ export default function ProfilePage() {
                       label=""
                       color="bg-purple-500/20 text-purple-400"
                     />
+                    {profile?.yearOfStudy && (
+                      <StatBadge
+                        icon={GraduationCap}
+                        value={`${profile.yearOfStudy}${profile.yearOfStudy === 1 ? "st" : profile.yearOfStudy === 2 ? "nd" : profile.yearOfStudy === 3 ? "rd" : "th"}`}
+                        label="Year"
+                        color="bg-emerald-500/20 text-emerald-400"
+                      />
+                    )}
                   </div>
                 </div>
 
@@ -710,43 +737,50 @@ export default function ProfilePage() {
             </div>
           </motion.div>
 
-                    {/* Interests Section */}
-                    <motion.div variants={itemVariants}>
-                        <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                            <Heart className="text-pink-400" size={22} />
-                            Skills & Interests
-                        </h2>
-                        <div className="bg-gradient-to-br from-gray-800/60 to-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                                {AVAILABLE_INTERESTS.map((interest) => {
-                                    const isSelected = selectedInterests.includes(interest.name);
-                                    return (
-                                        <motion.button
-                                            key={interest.name}
-                                            disabled={!isEditing}
-                                            whileHover={isEditing ? { scale: 1.05 } : {}}
-                                            whileTap={isEditing ? { scale: 0.95 } : {}}
-                                            onClick={() => toggleInterest(interest.name)}
-                                            className={`relative p-3 rounded-xl text-center transition-all border ${isSelected
-                                                ? "bg-gradient-to-br " + interest.color + " text-white border-transparent shadow-lg"
-                                                : "bg-gray-800/40 border-gray-700 text-gray-400 hover:border-gray-600"
-                                                } ${!isEditing && !isSelected ? "opacity-40 grayscale" : ""}`}
-                                        >
-                                            <span className="text-2xl block mb-1">{interest.icon}</span>
-                                            <span className="text-xs font-bold uppercase tracking-wider">{interest.name}</span>
-                                            {isSelected && isEditing && (
-                                                <div className="absolute -top-1 -right-1 bg-white text-black rounded-full p-0.5 shadow-md">
-                                                    <Check size={10} strokeWidth={4} />
-                                                </div>
-                                            )}
-                                        </motion.button>
-                                    );
-                                })}
-                            </div>
+          {/* Interests Section */}
+          <motion.div variants={itemVariants}>
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <Heart className="text-pink-400" size={22} />
+              Skills & Interests
+            </h2>
+            <div className="bg-gradient-to-br from-gray-800/60 to-gray-900/80 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                {AVAILABLE_INTERESTS.map((interest) => {
+                  const isSelected = selectedInterests.includes(interest.name);
+                  return (
+                    <motion.button
+                      key={interest.name}
+                      disabled={!isEditing}
+                      whileHover={isEditing ? { scale: 1.05 } : {}}
+                      whileTap={isEditing ? { scale: 0.95 } : {}}
+                      onClick={() => toggleInterest(interest.name)}
+                      className={`relative p-3 rounded-xl text-center transition-all border ${
+                        isSelected
+                          ? "bg-gradient-to-br " +
+                            interest.color +
+                            " text-white border-transparent shadow-lg"
+                          : "bg-gray-800/40 border-gray-700 text-gray-400 hover:border-gray-600"
+                      } ${!isEditing && !isSelected ? "opacity-40 grayscale" : ""}`}
+                    >
+                      <span className="text-2xl block mb-1">
+                        {interest.icon}
+                      </span>
+                      <span className="text-xs font-bold uppercase tracking-wider">
+                        {interest.name}
+                      </span>
+                      {isSelected && isEditing && (
+                        <div className="absolute -top-1 -right-1 bg-white text-black rounded-full p-0.5 shadow-md">
+                          <Check size={10} strokeWidth={4} />
                         </div>
-                    </motion.div>
+                      )}
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
 
-                    {/* Team Section */}
+          {/* Team Section */}
           {team && (
             <motion.div variants={itemVariants}>
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">

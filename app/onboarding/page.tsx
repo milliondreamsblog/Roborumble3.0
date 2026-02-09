@@ -42,8 +42,8 @@ const STEPS = [
   { id: 1, title: "Identity", icon: User },
   { id: 2, title: "Education", icon: GraduationCap },
   { id: 3, title: "Location", icon: MapPin },
-  { id: 4, title: "Contact", icon: Phone },
-  { id: 5, title: "Interests", icon: Heart },
+  { id: 4, title: "Interests", icon: Heart },
+  { id: 5, title: "Contact", icon: Phone },
 ];
 
 const pageVariants = {
@@ -304,12 +304,12 @@ export default function OnboardingPage() {
         return false;
       }
     }
-    if (step === 4 && (!formData.phone.trim() || formData.phone.length < 10)) {
-      setError("Please enter a valid mobile number");
+    if (step === 4 && selectedInterests.length === 0) {
+      setError("Please select at least one interest");
       return false;
     }
-    if (step === 5 && selectedInterests.length === 0) {
-      setError("Please select at least one interest");
+    if (step === 5 && (!formData.phone.trim() || formData.phone.length < 10)) {
+      setError("Please enter a valid mobile number");
       return false;
     }
     return true;
@@ -558,6 +558,59 @@ export default function OnboardingPage() {
               initial="initial"
               animate="animate"
               exit="exit"
+              className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-4"
+            >
+              <p className="text-gray-400 text-xs mb-3">
+                Select topics you&apos;re passionate about:
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                {AVAILABLE_INTERESTS.map((interest) => {
+                  const isSelected = selectedInterests.includes(interest.name);
+                  return (
+                    <motion.button
+                      key={interest.name}
+                      type="button"
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        setSelectedInterests((prev) =>
+                          prev.includes(interest.name)
+                            ? prev.filter((i) => i !== interest.name)
+                            : [...prev, interest.name],
+                        );
+                      }}
+                      className={`p-2 rounded-lg border text-center transition-all ${
+                        isSelected
+                          ? "bg-cyan-500/20 border-cyan-500 text-cyan-400"
+                          : "bg-gray-800/30 border-gray-700 text-gray-500 hover:border-gray-600"
+                      }`}
+                    >
+                      <span className="text-lg block mb-1">
+                        {interest.icon}
+                      </span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider">
+                        {interest.name}
+                      </span>
+                    </motion.button>
+                  );
+                })}
+              </div>
+              <div className="mt-2 text-center">
+                <span
+                  className={`text-xs ${selectedInterests.length > 0 ? "text-cyan-400" : "text-gray-500"}`}
+                >
+                  {selectedInterests.length} selected
+                </span>
+              </div>
+            </motion.div>
+          )}
+          {currentStep === 5 && (
+            <motion.div
+              key="s5"
+              custom={direction}
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
               className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-4 space-y-4"
             >
               <AnimatedInput
@@ -577,56 +630,6 @@ export default function OnboardingPage() {
               </div>
             </motion.div>
           )}
-          {currentStep === 5 && (
-            <motion.div
-              key="s5"
-              custom={direction}
-              variants={pageVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-4"
-            >
-              <p className="text-gray-400 text-xs mb-3">
-                Select topics you&apos;re passionate about:
-              </p>
-              <div className="grid grid-cols-3 gap-2">
-                {AVAILABLE_INTERESTS.map((interest) => {
-                  const isSelected = selectedInterests.includes(interest.name);
-                  return (
-                    <motion.button
-                      key={interest.name}
-                      type="button"
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => toggleInterest(interest.name)}
-                      className={`relative p-2.5 rounded-lg text-center transition-all ${
-                        isSelected
-                          ? "bg-gradient-to-br " +
-                            interest.color +
-                            " text-white shadow-lg"
-                          : "bg-gray-800/50 border border-gray-700 text-gray-300 hover:border-gray-600"
-                      }`}
-                    >
-                      <span className="text-lg block">{interest.icon}</span>
-                      <span className="text-xs font-medium">
-                        {interest.name}
-                      </span>
-                      {isSelected && (
-                        <Check size={12} className="absolute top-1 right-1" />
-                      )}
-                    </motion.button>
-                  );
-                })}
-              </div>
-              <div className="mt-2 text-center">
-                <span
-                  className={`text-xs ${selectedInterests.length > 0 ? "text-cyan-400" : "text-gray-500"}`}
-                >
-                  {selectedInterests.length} selected
-                </span>
-              </div>
-            </motion.div>
-          )}
         </AnimatePresence>
 
         {/* Navigation - directly after form */}
@@ -639,7 +642,7 @@ export default function OnboardingPage() {
           >
             <ChevronLeft size={16} /> Back
           </motion.button>
-          {currentStep < 4 ? (
+          {currentStep < 5 ? (
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={nextStep}

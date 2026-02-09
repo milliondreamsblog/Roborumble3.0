@@ -9,11 +9,6 @@ export interface IProfile extends Document {
     username?: string;
     bio?: string;
     phone?: string;
-    college?: string;
-    course?: string;
-    city?: string;
-    state?: string;
-    degree?: string;
     branch?: string;
     yearOfStudy?: number;
     role: "user" | "admin" | "superadmin";
@@ -41,7 +36,6 @@ const ProfileSchema = new Schema<IProfile>(
         bio: { type: String, maxlength: 500 },
         phone: String,
         college: String,
-        course: String,
         city: String,
         state: String,
         degree: String,

@@ -6,6 +6,7 @@ import Profile from "@/app/models/Profile";
 export async function POST(req: Request) {
     try {
         const body = await req.json();
+        console.log("Onboarding API received body:", JSON.stringify(body, null, 2));
         const { clerkId, username, phone, college, city, state, degree, branch, yearOfStudy, interests, bio } = body;
 
         // Validation
