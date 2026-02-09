@@ -11,7 +11,7 @@ export const events = [
     teamSize: "3-5 Members",
     prize: "₹20,000 Prize Pool",
     cost: 400,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/Robo Obstace Race.pdf",
     rules: [
       "Objective: Finish track in shortest time.",
       "Single run (no trials). Penalties for skipping obstacles.",
@@ -38,7 +38,7 @@ export const events = [
     teamSize: "3-5 Members",
     prize: "₹20,000 Prize Pool",
     cost: 400,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/Robo War.pdf",
     rules: [
       "Objective: Knockout or push opponent out.",
       "Weapons: Hidden allowed. Pneumatic pincers, armor, axes allowed.",
@@ -64,7 +64,7 @@ export const events = [
     teamSize: "3-5 Members",
     prize: "₹15,000 Prize Pool",
     cost: 400,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/Line Following Bot.pdf",
     rules: [
       "Autonomous only (onboard sensors). No external control.",
       "2 attempts allowed; best time recorded.",
@@ -89,7 +89,7 @@ export const events = [
     teamSize: "2-4 Members",
     prize: "₹20,000 Prize Pool",
     cost: 400,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/Robo Soccer.pdf",
     rules: [
       "Format: 1v1 Knockout.",
       "Match: 3 rounds (3 mins each).",
@@ -112,7 +112,7 @@ export const events = [
     teamSize: "3-5 Members",
     prize: "₹20,000 Prize Pool",
     cost: 400,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/Pick & Drop Challenge.pdf",
     rules: [
       "Elimination Round: 3 rounds of 2 mins.",
       "Qualify by collecting most boxes (9 total)."
@@ -133,7 +133,7 @@ export const events = [
     teamSize: "Individual / Team of 2",
     prize: "₹20,000 Prize Pool",
     cost: 400,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/RC Flying.pdf",
     rules: [
       "Manual RC only (2.4 GHz). No GPS/Autopilot.",
       "Tasks: Takeoff, figure-8, 180-turn, loop/roll, landing."
@@ -155,7 +155,7 @@ export const events = [
     teamSize: "4 Members (Squad)",
     prize: "₹20,000 Prize Pool",
     cost: 250,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/E-Sports.pdf",
     rules: [
       "Mobile phones only. No tablets/triggers/emulators.",
       "Top 5 must submit POV + Handcam footage.",
@@ -175,7 +175,7 @@ export const events = [
     teamSize: "1-4 Members",
     prize: "Certificate",
     cost: 250,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/Showcase & Exhibition.pdf",
     rules: [
       "Criteria: Usability, Innovation, Presentation, Uniqueness."
     ],
@@ -190,7 +190,7 @@ export const events = [
     teamSize: "Open to All",
     prize: "N/A",
     cost: 0,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/Defence talk.pdf",
     rules: [
       "Open to registered participants.",
       "Q&A restricted to designated sessions."
@@ -206,7 +206,7 @@ export const events = [
     teamSize: "Open to All",
     prize: "Exhibition",
     cost: 0,
-    brochureLink: "/RoboRumble.pdf",
+    brochureLink: "/event_specific_brochures/Defence Expo.pdf",
     rules: [
       "Open to all registered participants and visitors.",
       "Exhibits must be set up within the allotted time and space.",
