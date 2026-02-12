@@ -99,6 +99,7 @@ const teamData = {
         { icon: HiOutlineMail, link: "#" },
       ],
     },
+
     {
       name: "Vaishnavi Singh",
       role: "Hospitality Head",
@@ -235,7 +236,7 @@ const teamData = {
       img: "/anant.jpeg",
       socials: [
         { icon: FaInstagram, link: "#" },
-        { icon: FaLinkedinIn, link: "#" },
+        { icon: FaLinkedinIn, link: "https://www.linkedin.com/in/ananttirupati?utm_source=share_via&utm_content=profile&utm_medium=member_android" },
         { icon: HiOutlineMail, link: "#" },
       ],
     },
@@ -289,12 +290,12 @@ const teamData = {
       role: "Contributor",
       img: "/sumit.jpeg",
       socials: [
-        { icon: FaInstagram, link: "https://www.instagram.com/_jaii.verrma_/" },
+        { icon: FaInstagram, link: "https://www.instagram.com/ska_0770?igsh=cGFzd3NvdWZvaHU3" },
         {
           icon: FaLinkedinIn,
-          link: "https://linkedin.com/in/jai-verma-270a49305",
+          link: "https://www.linkedin.com/in/sumit-kumar-122671322/",
         },
-        { icon: HiOutlineMail, link: "mailto:jaivermacse70@gmail.com" },
+        { icon: HiOutlineMail, link: "mailto:sumitkumar202006@gmail.com" },
       ],
     },
     {
@@ -326,6 +327,16 @@ export default function TeamSection() {
       scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
   }, [activeTeam]);
 
+  // Scroll to keep selected member in view
+  const scrollToMember = (index: number) => {
+    if (scrollRef.current) {
+      const cardWidth = 128 + 24; // w-32 (128px) + gap-6 (24px)
+      const containerWidth = scrollRef.current.clientWidth;
+      const scrollPosition = (index * cardWidth) - (containerWidth / 2) + (cardWidth / 2);
+      scrollRef.current.scrollTo({ left: Math.max(0, scrollPosition), behavior: "smooth" });
+    }
+  };
+
   const handlePrevMember = () => {
     const currentTeam = teamData[activeTeam];
     const currentIndex = currentTeam.findIndex(
@@ -334,6 +345,7 @@ export default function TeamSection() {
     const prevIndex =
       (currentIndex - 1 + currentTeam.length) % currentTeam.length;
     setSelectedMember(currentTeam[prevIndex]);
+    scrollToMember(prevIndex);
   };
 
   const handleNextMember = () => {
@@ -343,6 +355,7 @@ export default function TeamSection() {
     );
     const nextIndex = (currentIndex + 1) % currentTeam.length;
     setSelectedMember(currentTeam[nextIndex]);
+    scrollToMember(nextIndex);
   };
 
   const scrollToStart = () => {
@@ -409,11 +422,10 @@ export default function TeamSection() {
             <button
               key={team}
               onClick={() => setActiveTeam(team as "core" | "tech")}
-              className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border ${
-                activeTeam === team
-                  ? "bg-[#00F0FF]/10 border-[#00F0FF] text-[#00F0FF] shadow-[0_0_15px_rgba(0,240,255,0.6)]"
-                  : "bg-transparent border-zinc-700 text-zinc-500"
-              }`}
+              className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border ${activeTeam === team
+                ? "bg-[#00F0FF]/10 border-[#00F0FF] text-[#00F0FF] shadow-[0_0_15px_rgba(0,240,255,0.6)]"
+                : "bg-transparent border-zinc-700 text-zinc-500"
+                }`}
             >
               {team === "core"
                 ? "Core Team"
@@ -564,14 +576,12 @@ export default function TeamSection() {
 
         <div className="w-full px-10">
           <div className="flex items-center justify-center gap-4">
-            {isScrollable && (
-              <button
-                onClick={scrollToStart}
-                className="p-3 bg-black/40 border border-[#00F0FF]/30 text-[#00F0FF] rounded-full hover:bg-[#00F0FF] hover:text-black"
-              >
-                <FaChevronLeft />
-              </button>
-            )}
+            <button
+              onClick={handlePrevMember}
+              className="p-3 bg-black/40 border border-[#00F0FF]/30 text-[#00F0FF] rounded-full hover:bg-[#00F0FF] hover:text-black transition-all"
+            >
+              <FaChevronLeft />
+            </button>
             <div
               ref={scrollRef}
               className="flex gap-6 overflow-x-auto no-scrollbar py-4 justify-start max-w-5xl scroll-smooth"
@@ -601,14 +611,12 @@ export default function TeamSection() {
                 </div>
               ))}
             </div>
-            {isScrollable && (
-              <button
-                onClick={scrollToEnd}
-                className="p-3 bg-black/40 border border-[#00F0FF]/30 text-[#00F0FF] rounded-full hover:bg-[#00F0FF] hover:text-black"
-              >
-                <FaChevronRight />
-              </button>
-            )}
+            <button
+              onClick={handleNextMember}
+              className="p-3 bg-black/40 border border-[#00F0FF]/30 text-[#00F0FF] rounded-full hover:bg-[#00F0FF] hover:text-black transition-all"
+            >
+              <FaChevronRight />
+            </button>
           </div>
         </div>
       </div>
