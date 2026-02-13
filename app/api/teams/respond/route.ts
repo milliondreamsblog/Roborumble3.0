@@ -56,6 +56,19 @@ export async function POST(req: Request) {
                     return NextResponse.json({ message: "Team is locked" }, { status: 400 });
                 }
 
+                // Check if user is already in a team of this type
+                const alreadyInTeam = await Team.findOne({
+                    isEsports: team.isEsports,
+                    $or: [{ leaderId: profile._id }, { members: profile._id }],
+                });
+
+                if (alreadyInTeam) {
+                    return NextResponse.json(
+                        { message: `You are already in ${team.isEsports ? "an esports" : "a"} team` },
+                        { status: 400 }
+                    );
+                }
+
                 // Add user to team
                 const leaderProfile = await Profile.findById(team.leaderId);
                 if (!team.isEsports && leaderProfile && leaderProfile.college !== profile.college) {
@@ -116,6 +129,19 @@ export async function POST(req: Request) {
             if (action === "accept_request") {
                 if (team.isLocked) {
                     return NextResponse.json({ message: "Team is locked" }, { status: 400 });
+                }
+
+                // Verify requester is not already in another team of this type
+                const requesterAlreadyInTeam = await Team.findOne({
+                    isEsports: team.isEsports,
+                    $or: [{ leaderId: userId }, { members: userId }],
+                });
+
+                if (requesterAlreadyInTeam) {
+                    return NextResponse.json(
+                        { message: `User is already in ${team.isEsports ? "an esports" : "a"} team` },
+                        { status: 400 }
+                    );
                 }
 
                 // Verify college match (unless esports)
