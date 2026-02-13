@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         // Find user profile
         const profile = await Profile.findOne({ clerkId });
         if (!profile) {
-            return NextResponse.json({ error: "Profile not found. Complete onboarding first." }, { status: 404 });
+            return NextResponse.json({ error: "Complete profile details. Complete onboarding first." }, { status: 404 });
         }
 
         // Type assertion to ensure _id exists

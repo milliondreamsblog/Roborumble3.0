@@ -112,7 +112,7 @@ export async function POST(req: Request) {
         // Check search profile completeness for invitee
         const mandatoryFields = ["username", "phone", "college", "city", "state", "degree", "branch", "yearOfStudy"];
         const inviteeIncomplete = mandatoryFields.some(field => !inviteeProfile![field as keyof typeof inviteeProfile]);
-        
+
         if (!inviteeProfile.onboardingCompleted || inviteeIncomplete) {
             return NextResponse.json(
                 { message: "This user has an incomplete profile and cannot be invited yet." },
@@ -175,7 +175,7 @@ export async function GET(req: Request) {
         const profile = await Profile.findOne({ clerkId });
         if (!profile) {
             return NextResponse.json(
-                { message: "Profile not found" },
+                { message: "Complete profile details" },
                 { status: 404 }
             );
         }

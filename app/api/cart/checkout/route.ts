@@ -61,7 +61,7 @@ export async function POST(req: Request) {
         // Get user profile for email
         const profile = await Profile.findOne({ clerkId });
         if (!profile) {
-            return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+            return NextResponse.json({ error: "Complete profile details" }, { status: 404 });
         }
 
         // Prepare events data
@@ -88,8 +88,8 @@ export async function POST(req: Request) {
             verifiedBy: isFree ? "SYSTEM" : undefined,
             verifiedAt: isFree ? new Date() : undefined,
             leaderEmail: profile.email,
-            leaderName: profile.firstName && profile.lastName 
-                ? `${profile.firstName} ${profile.lastName}` 
+            leaderName: profile.firstName && profile.lastName
+                ? `${profile.firstName} ${profile.lastName}`
                 : profile.username || profile.email,
             leaderPhone: profile.phone || "N/A",
         });
@@ -121,11 +121,11 @@ export async function POST(req: Request) {
 
         // Update profile paidEvents if free
         if (isFree) {
-             const eventIds = events.map((e: any) => e.eventId.toString());
-             await Profile.updateOne(
-                 { _id: profile._id },
-                 { $addToSet: { paidEvents: { $each: eventIds } } }
-             );
+            const eventIds = events.map((e: any) => e.eventId.toString());
+            await Profile.updateOne(
+                { _id: profile._id },
+                { $addToSet: { paidEvents: { $each: eventIds } } }
+            );
         }
 
         // Clear the cart after successful submission

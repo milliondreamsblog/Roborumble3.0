@@ -90,7 +90,7 @@ export async function POST(req: Request) {
 
         if (!updatedProfile) {
             return NextResponse.json(
-                { message: "Profile not found. Please sign up again." },
+                { message: "Complete profile details. Please sign up again." },
                 { status: 404 }
             );
         }

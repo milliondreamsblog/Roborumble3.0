@@ -71,88 +71,88 @@ export default function SearchableSelect({
                 {required && <span className="text-cyan-400 ml-1">*</span>}
             </label>
 
-            {/* Selected Value Display */}
-            {value ? (
-                <div className="flex items-center gap-2 w-full pl-10 pr-3 py-2.5 bg-gray-900 border border-cyan-500/50 rounded-lg text-white text-sm relative">
-                    {Icon ? (
-                        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-400" />
-                    ) : (
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-400" />
+            {/* Always show input */}
+            <div className="relative">
+                {Icon ? (
+                    <Icon className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${value ? 'text-cyan-400' : 'text-gray-500'}`} />
+                ) : (
+                    <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${value ? 'text-cyan-400' : 'text-gray-500'}`} />
+                )}
+                <input
+                    type="text"
+                    value={query || (options.find(o => o.value === value)?.label || value)}
+                    onChange={(e) => {
+                        setQuery(e.target.value);
+                        if (!isOpen) setIsOpen(true);
+                        // Clear the committed value if user starts typing something else
+                        if (value && e.target.value !== selectedLabel) {
+                            onChange("");
+                        }
+                    }}
+                    onFocus={() => setIsOpen(true)}
+                    onBlur={() => {
+                        setTimeout(() => {
+                            if (query.trim() && !value) {
+                                onChange(query.trim());
+                                setQuery(""); // Reset query so it uses the selectedLabel logic for display
+                            }
+                        }, 200);
+                    }}
+                    placeholder={placeholder}
+                    className={`w-full pl-10 pr-12 py-2.5 bg-gray-900 border rounded-lg text-white placeholder-gray-500 focus:outline-none transition-all text-sm ${
+                        value ? 'border-cyan-500/50' : 'border-gray-700 focus:border-cyan-500'
+                    }`}
+                />
+                
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    {value && (
+                        <button
+                            type="button"
+                            onClick={handleClear}
+                            className="text-gray-400 hover:text-white transition-colors p-1"
+                        >
+                            <X size={14} />
+                        </button>
                     )}
-                    <span className="flex-1 truncate">{selectedLabel}</span>
-                    <button
-                        type="button"
-                        onClick={handleClear}
-                        className="text-gray-400 hover:text-white transition-colors shrink-0"
-                    >
-                        <X size={14} />
-                    </button>
-                </div>
-            ) : (
-                /* Search input - user can type freely */
-                <div className="relative">
-                    {Icon ? (
-                        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    ) : (
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    )}
-                    <input
-                        type="text"
-                        value={query}
-                        onChange={(e) => {
-                            setQuery(e.target.value);
-                            if (!isOpen) setIsOpen(true);
-                        }}
-                        onFocus={() => setIsOpen(true)}
-                        onBlur={() => {
-                            setTimeout(() => {
-                                if (query.trim() && !value) {
-                                    onChange(query.trim());
-                                }
-                            }, 200);
-                        }}
-                        placeholder={placeholder}
-                        className="w-full pl-10 pr-8 py-2.5 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-all text-sm"
-                    />
                     <ChevronDown
-                        className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                        className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? "rotate-180" : ""}`}
                     />
-
-                    {/* Dropdown */}
-                    <AnimatePresence>
-                        {isOpen && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -4 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -4 }}
-                                transition={{ duration: 0.15 }}
-                                className="absolute z-[9999] w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-xl shadow-black/50 flex flex-col"
-                            >
-                                <div className="max-h-40 overflow-y-auto">
-                                    {filteredOptions.length > 0 ? (
-                                        filteredOptions.map((opt) => (
-                                            <button
-                                                type="button"
-                                                key={opt.value}
-                                                onClick={() => handleSelect(opt.value)}
-                                                className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-cyan-500/10 hover:text-cyan-400 transition-colors border-b border-gray-700/50 last:border-0"
-                                            >
-                                                {opt.label}
-                                            </button>
-                                        ))
-                                    ) : (
-                                        <div className="py-3 px-4">
-                                            <p className="text-gray-500 text-sm">
-                                                No match — your typed value will be used
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
                 </div>
-            )}
+
+                {/* Dropdown */}
+                <AnimatePresence>
+                    {isOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute z-[9999] w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-xl shadow-black/50 flex flex-col"
+                        >
+                            <div className="max-h-40 overflow-y-auto">
+                                {filteredOptions.length > 0 ? (
+                                    filteredOptions.map((opt) => (
+                                        <button
+                                            type="button"
+                                            key={opt.value}
+                                            onClick={() => handleSelect(opt.value)}
+                                            className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-cyan-500/10 hover:text-cyan-400 transition-colors border-b border-gray-700/50 last:border-0"
+                                        >
+                                            {opt.label}
+                                        </button>
+                                    ))
+                                ) : (
+                                    <div className="py-3 px-4">
+                                        <p className="text-gray-500 text-sm">
+                                            No match — your typed value will be used
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
     );
 }

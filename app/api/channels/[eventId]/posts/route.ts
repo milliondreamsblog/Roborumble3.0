@@ -100,7 +100,7 @@ export async function POST(
 
         const profile = await Profile.findOne({ clerkId: userId });
         if (!profile) {
-            return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+            return NextResponse.json({ error: "Complete profile details" }, { status: 404 });
         }
 
         // Create post with denormalized author info

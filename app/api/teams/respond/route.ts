@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
         const profile = await Profile.findOne({ clerkId });
         if (!profile) {
-            return NextResponse.json({ message: "Profile not found" }, { status: 404 });
+            return NextResponse.json({ message: "Complete profile details" }, { status: 404 });
         }
 
         // Handle user accepting/rejecting an invitation
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
                 } else {
                     updateData.currentTeamId = teamId;
                 }
-                
+
                 await Profile.findByIdAndUpdate(profile._id, updateData);
 
                 return NextResponse.json({ message: "You have joined the team!" });
