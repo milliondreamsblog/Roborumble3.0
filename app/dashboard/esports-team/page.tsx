@@ -368,17 +368,25 @@ export default function EsportsTeamPage() {
         }
     }
 
-    // Search teams
-    async function searchTeams() {
-        if (!teamSearchQuery.trim()) return;
-        try {
-            const res = await fetch(`/api/teams?search=${encodeURIComponent(teamSearchQuery)}&type=esports`);
-            const data = await res.json();
-            setTeamSearchResults(data.teams || []);
-        } catch (e) {
-            console.error(e);
-        }
-    }
+    // Debounced team search
+    useEffect(() => {
+        const timer = setTimeout(async () => {
+            if (teamSearchQuery.length < 2) {
+                setTeamSearchResults([]);
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/teams?search=${encodeURIComponent(teamSearchQuery)}&type=esports`);
+                const data = await res.json();
+                setTeamSearchResults(data.teams || []);
+            } catch (e) {
+                console.error(e);
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [teamSearchQuery]);
 
     // Request to join team
     async function requestJoin(teamId: string) {
@@ -902,17 +910,78 @@ export default function EsportsTeamPage() {
                             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                                 <Users size={24} className="text-green-400" />
                                 Join an Esports Squad
-                                <span className="ml-auto text-sm font-normal text-gray-400">
-                                    {availableTeams.length} squads recruiting
-                                </span>
                             </h2>
+
+                            {/* Team Search Input */}
+                            <div className="relative mb-6">
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                <input
+                                    type="text"
+                                    value={teamSearchQuery}
+                                    onChange={(e) => setTeamSearchQuery(e.target.value)}
+                                    placeholder="Search squads by name..."
+                                    className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 transition-all"
+                                />
+                            </div>
 
                             {availableTeamsLoading ? (
                                 <div className="flex items-center justify-center py-8">
                                     <Loader2 className="animate-spin text-green-400" size={24} />
                                 </div>
+                            ) : teamSearchQuery.length >= 2 ? (
+                                /* Search Results */
+                                <div className="space-y-3">
+                                    <p className="text-gray-400 text-sm mb-2">Search Results</p>
+                                    {teamSearchResults.length > 0 ? (
+                                        teamSearchResults.map((t) => (
+                                            <motion.div
+                                                key={t._id}
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-800/55 rounded-xl border border-green-500/30 transition-all group gap-4"
+                                            >
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-bold shrink-0">
+                                                        {t.name?.[0]?.toUpperCase() || "S"}
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-white font-medium truncate">{t.name}</p>
+                                                        <p className="text-gray-400 text-sm flex flex-wrap items-center gap-1 sm:gap-2">
+                                                            <span className="flex items-center gap-1">
+                                                                <Crown size={12} className="text-yellow-400" />
+                                                                {t.leaderId?.username || "Unknown"}
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <motion.button
+                                                    whileHover={{ scale: 1.02 }}
+                                                    whileTap={{ scale: 0.98 }}
+                                                    onClick={() => requestJoin(t._id)}
+                                                    disabled={actionLoading === `join-${t._id}`}
+                                                    className="px-4 py-2 bg-green-500/20 border border-green-500/30 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors flex items-center justify-center gap-2 shrink-0 w-full sm:w-auto"
+                                                >
+                                                    {actionLoading === `join-${t._id}` ? (
+                                                        <Loader2 size={16} className="animate-spin" />
+                                                    ) : (
+                                                        <Send size={16} />
+                                                    )}
+                                                    Request
+                                                </motion.button>
+                                            </motion.div>
+                                        ))
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center py-8 text-gray-500">
+                                            <p className="text-sm">No squads found matching &ldquo;{teamSearchQuery}&rdquo;</p>
+                                        </div>
+                                    )}
+                                </div>
                             ) : availableTeams.length > 0 ? (
                                 <div className="space-y-3">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <p className="text-gray-400 text-sm">Recently Active Squads</p>
+                                        <span className="text-xs text-gray-500">{availableTeams.length} squads recruiting</span>
+                                    </div>
                                     {availableTeams.map((t) => (
                                         <motion.div
                                             key={t._id}
