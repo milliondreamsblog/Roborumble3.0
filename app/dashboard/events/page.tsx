@@ -413,12 +413,6 @@ const HorizontalEventCard = ({
                   <span className="text-sm font-mono text-white">
                     {member.username || member.email}
                   </span>
-                  {member.college &&
-                    member.college !== activeTeam.leaderId?.college && (
-                      <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded ml-auto">
-                        Cross-College
-                      </span>
-                    )}
                 </label>
               ))}
             </div>

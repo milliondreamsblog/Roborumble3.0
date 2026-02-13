@@ -85,8 +85,9 @@ export async function POST(req: Request) {
             );
         }
 
-        // Check if user is already in a team
+        // Check if user is already in a team of this type
         const userInTeam = await Team.findOne({
+            isEsports: team.isEsports,
             $or: [
                 { leaderId: inviteeProfile._id },
                 { members: inviteeProfile._id },
@@ -95,7 +96,7 @@ export async function POST(req: Request) {
 
         if (userInTeam) {
             return NextResponse.json(
-                { message: `${inviteeProfile.username || inviteeProfile.email} is already in a team` },
+                { message: `${inviteeProfile.username || inviteeProfile.email} is already in ${team.isEsports ? "an esports" : "a"} team` },
                 { status: 400 }
             );
         }

@@ -35,22 +35,23 @@ export async function POST(req: Request) {
             );
         }
 
-        // Check if user is already in a team
+        // Get the target team first to know its type
+        const team = await Team.findById(teamId).populate("leaderId", "college");
+        if (!team) {
+            return NextResponse.json({ message: "Team not found" }, { status: 404 });
+        }
+
+        // Check if user is already in a team of this type
         const existingTeam = await Team.findOne({
+            isEsports: team.isEsports,
             $or: [{ leaderId: profile._id }, { members: profile._id }],
         });
 
         if (existingTeam) {
             return NextResponse.json(
-                { message: "You are already in a team" },
+                { message: `You are already in ${team.isEsports ? "an esports" : "a"} team` },
                 { status: 400 }
             );
-        }
-
-        // Get the team
-        const team = await Team.findById(teamId).populate("leaderId", "college");
-        if (!team) {
-            return NextResponse.json({ message: "Team not found" }, { status: 404 });
         }
 
         // Check same-college rule (unless it's an esports team)
