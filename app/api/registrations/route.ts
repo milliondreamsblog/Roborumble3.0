@@ -23,7 +23,7 @@ export async function GET(request: Request) {
             const profile = await Profile.findOne({ clerkId });
 
             if (!profile) {
-                return NextResponse.json({ message: "Profile not found" }, { status: 404 });
+                return NextResponse.json({ message: "Complete profile details" }, { status: 404 });
             }
 
             // Find all teams where user is a member

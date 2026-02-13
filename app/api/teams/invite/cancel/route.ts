@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         const inviterProfile = await Profile.findOne({ clerkId });
         if (!inviterProfile) {
             return NextResponse.json(
-                { message: "Profile not found" },
+                { message: "Complete profile details" },
                 { status: 404 }
             );
         }

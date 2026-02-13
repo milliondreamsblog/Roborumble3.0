@@ -19,7 +19,7 @@ export async function GET(req: Request) {
             const profile = await Profile.findOne({ clerkId }).lean();
             if (!profile) {
                 return NextResponse.json(
-                    { message: "Profile not found" },
+                    { message: "Complete profile details" },
                     { status: 404 }
                 );
             }
@@ -107,7 +107,7 @@ export async function POST(req: Request) {
         const profile = await Profile.findOne({ clerkId });
         if (!profile) {
             return NextResponse.json(
-                { message: "Profile not found" },
+                { message: "Complete profile details" },
                 { status: 404 }
             );
         }
@@ -115,7 +115,7 @@ export async function POST(req: Request) {
         // Check profile completeness
         const mandatoryFields = ["username", "phone", "college", "city", "state", "degree", "branch", "yearOfStudy"];
         const isIncomplete = mandatoryFields.some(field => !profile[field as keyof typeof profile]);
-        
+
         if (!profile.onboardingCompleted || isIncomplete) {
             return NextResponse.json(
                 { message: "Incomplete profile. Please fill all details in your profile before creating a team." },
@@ -137,8 +137,8 @@ export async function POST(req: Request) {
         }
 
         // Check if team name is taken (case-insensitive)
-        const nameTaken = await Team.findOne({ 
-            name: { $regex: new RegExp(`^${teamName.trim()}$`, "i") } 
+        const nameTaken = await Team.findOne({
+            name: { $regex: new RegExp(`^${teamName.trim()}$`, "i") }
         });
         if (nameTaken) {
             return NextResponse.json(

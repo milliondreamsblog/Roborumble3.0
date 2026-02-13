@@ -25,7 +25,7 @@ export async function GET() {
     const profile = await Profile.findById(decoded.userId);
 
     if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+      return NextResponse.json({ error: "Complete profile details" }, { status: 404 });
     }
 
     // Find registrations for user's team

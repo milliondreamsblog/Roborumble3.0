@@ -564,8 +564,8 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Edit/Save Buttons */}
-                <div className="flex items-center gap-3">
+                {/* Edit/Save Buttons - Desktop */}
+                <div className="hidden md:flex items-center gap-3">
                   {isEditing ? (
                     <>
                       <motion.button
@@ -876,6 +876,43 @@ export default function ProfilePage() {
               </div>
             </motion.div>
           )}
+          {/* Mobile Action Buttons */}
+          <div className="md:hidden pt-4 pb-8">
+            {isEditing ? (
+              <div className="flex flex-col gap-3">
+                <motion.button
+                  onClick={handleSave}
+                  disabled={saving}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold shadow-lg shadow-green-500/20 disabled:opacity-50"
+                >
+                  {saving ? (
+                    <Loader2 size={20} className="animate-spin" />
+                  ) : (
+                    <Save size={20} />
+                  )}
+                  <span>{saving ? "SAVING CHANGES..." : "SAVE PROFILE"}</span>
+                </motion.button>
+                <motion.button
+                  onClick={handleCancel}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gray-800 border border-gray-700 text-gray-400 rounded-xl font-medium"
+                >
+                  <X size={20} />
+                  <span>CANCEL</span>
+                </motion.button>
+              </div>
+            ) : (
+              <motion.button
+                onClick={() => setIsEditing(true)}
+                whileTap={{ scale: 0.95 }}
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-xl font-bold shadow-lg shadow-cyan-500/20"
+              >
+                <Edit3 size={20} />
+                <span>EDIT PROFILE</span>
+              </motion.button>
+            )}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         // Get user profile
         const profile = await Profile.findOne({ clerkId: userClerkId });
         if (!profile) {
-            return NextResponse.json({ message: "Profile not found. Complete onboarding first." }, { status: 404 });
+            return NextResponse.json({ message: "Complete profile details. Complete onboarding first." }, { status: 404 });
         }
 
         // Check if already paid

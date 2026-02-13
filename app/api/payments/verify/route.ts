@@ -55,7 +55,7 @@ export async function POST(req: Request) {
         // Find user profile
         const profile = await Profile.findOne({ clerkId });
         if (!profile) {
-            return NextResponse.json({ message: "Profile not found" }, { status: 404 });
+            return NextResponse.json({ message: "Complete profile details" }, { status: 404 });
         }
 
         // Mark event as paid

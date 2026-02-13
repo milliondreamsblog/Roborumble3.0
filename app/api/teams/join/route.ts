@@ -21,13 +21,13 @@ export async function POST(req: Request) {
         // Get requester's profile
         const profile = await Profile.findOne({ clerkId });
         if (!profile) {
-            return NextResponse.json({ message: "Profile not found" }, { status: 404 });
+            return NextResponse.json({ message: "Complete profile details" }, { status: 404 });
         }
 
         // Check profile completeness
         const mandatoryFields = ["username", "phone", "college", "city", "state", "degree", "branch", "yearOfStudy"];
         const isIncomplete = mandatoryFields.some(field => !profile[field as keyof typeof profile]);
-        
+
         if (!profile.onboardingCompleted || isIncomplete) {
             return NextResponse.json(
                 { message: "Incomplete profile. Please fill all details in your profile before requesting to join a team." },
@@ -115,7 +115,7 @@ export async function GET(req: Request) {
 
         const profile = await Profile.findOne({ clerkId });
         if (!profile) {
-            return NextResponse.json({ message: "Profile not found" }, { status: 404 });
+            return NextResponse.json({ message: "Complete profile details" }, { status: 404 });
         }
 
         // Must be a team leader
