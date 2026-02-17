@@ -104,7 +104,12 @@ export async function GET(req: Request) {
         // Enrich with leaderFullName and handle fallback for leaderPhone
         const enrichedSubmissions = await Promise.all(
             (submissions as unknown as EnrichedSubmission[]).map(async (sub) => {
-                const profile = await Profile.findOne({ clerkId: sub.clerkId }).select("firstName lastName username phone") as PopulatedMember | null;
+                const profile = await Profile.findOne({
+                    $or: [
+                        { clerkId: sub.clerkId },
+                        ...(mongoose.Types.ObjectId.isValid(sub.clerkId) ? [{ _id: sub.clerkId }] : [])
+                    ]
+                }).select("firstName lastName username phone") as PopulatedMember | null;
 
                 const leaderFullName = profile
                     ? [profile.firstName, profile.lastName].filter(Boolean).join(" ") || profile.username || sub.leaderName
@@ -122,10 +127,17 @@ export async function GET(req: Request) {
             pending: await PaymentSubmission.countDocuments({ status: "pending" }),
             verified: await PaymentSubmission.countDocuments({ status: "verified" }),
             rejected: await PaymentSubmission.countDocuments({ status: "rejected" }),
+            // REVENUE RESET: Only count payments verified after Feb 15, 2026 12:20 PM IST
+            // ISO: 2026-02-15T06:50:00.000Z
             totalRevenue: (await PaymentSubmission.aggregate([
-                { $match: { status: "verified" } },
+                { 
+                    $match: { 
+                        status: "verified",
+                        verifiedAt: { $gte: new Date("2026-02-15T06:50:00.000Z") }
+                    } 
+                },
                 { $group: { _id: null, total: { $sum: "$totalAmount" } } }
-            ]))[0]?.total || 0
+            ]))[0]?.total || 0,
         };
 
         return NextResponse.json({
@@ -221,7 +233,12 @@ export async function POST(req: Request) {
                         // Simplified: update if found by Clerk ID via Profile look up if needed, 
                         // but for now relying on teamId or just logging the failure.
                         // Actually, we can look up the profile from clerkId
-                        const profile = await Profile.findOne({ clerkId: submission.clerkId });
+                        const profile = await Profile.findOne({
+                            $or: [
+                                { clerkId: submission.clerkId },
+                                ...(mongoose.Types.ObjectId.isValid(submission.clerkId) ? [{ _id: submission.clerkId }] : [])
+                            ]
+                        });
                         if (profile) {
                             fallbackQuery.selectedMembers = profile._id;
                         }
@@ -255,7 +272,12 @@ export async function POST(req: Request) {
             // Update user profile with paid events
             const eventIds = submission.events.map((e) => e.eventId.toString());
             await Profile.findOneAndUpdate(
-                { clerkId: submission.clerkId },
+                {
+                    $or: [
+                        { clerkId: submission.clerkId },
+                        ...(mongoose.Types.ObjectId.isValid(submission.clerkId) ? [{ _id: submission.clerkId }] : [])
+                    ]
+                },
                 {
                     $addToSet: {
                         registeredEvents: { $each: eventIds },
