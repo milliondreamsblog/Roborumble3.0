@@ -638,8 +638,8 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="mb-10 animate-pulse text-center">
-            <h2 className="text-3xl md:text-5xl font-black font-mono uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#FF003C] via-[#E661FF] to-[#00F0FF] drop-shadow-[0_0_25px_rgba(230,97,255,0.5)] transform hover:scale-105 transition-transform duration-300">
+          <div className="relative z-20 mb-8 md:mb-10 animate-pulse text-center w-full px-4 overflow-hidden">
+            <h2 className="text-lg sm:text-2xl md:text-5xl font-black font-mono uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#FF003C] via-[#E661FF] to-[#00F0FF] drop-shadow-[0_0_25px_rgba(230,97,255,0.5)] transform hover:scale-105 transition-transform duration-300 whitespace-nowrap">
               PRIZE_POOL_₹1,50,000+
             </h2>
           </div>
@@ -1346,11 +1346,11 @@ export default function Home() {
                   </button>
                 </div>
 
-                <div className="p-4 md:p-8 lg:p-12 max-h-[60vh] md:max-h-[70vh] overflow-y-auto">
-                  <div className="grid md:grid-cols-[280px_1fr] gap-8 md:gap-12 items-center">
+                <div className="p-4 md:p-8 lg:p-12 max-h-[80vh] md:max-h-[70vh] overflow-y-auto custom-scrollbar">
+                  <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6 md:gap-12 items-center">
                     {/* Left Column - Image with Ring */}
                     <div className="flex flex-col items-center">
-                      <div className="relative w-52 h-52 md:w-64 md:h-64 mb-6">
+                      <div className="relative w-40 h-40 md:w-64 md:h-64 mb-4 md:mb-6">
                         {/* Tech Ring SVG */}
                         <svg
                           className="absolute inset-0 w-full h-full animate-spin-slow"
@@ -1405,10 +1405,10 @@ export default function Home() {
                       </div>
 
                       <div
-                        className="font-mono text-xs uppercase tracking-[0.2em] font-bold"
+                        className="font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-center"
                         style={{ color: theme.main }}
                       >
-                        //{" "}
+                          //{" "}
                         {selectedMentor.role === "Chief Patron"
                           ? "CHIEF_PATRON"
                           : selectedMentor.role
@@ -1418,18 +1418,18 @@ export default function Home() {
                     </div>
 
                     {/* Right Column - Content */}
-                    <div className="space-y-6">
+                    <div className="space-y-4 md:space-y-6 text-center md:text-left">
                       <div className="space-y-2">
-                        <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white font-mono uppercase tracking-tighter leading-none">
+                        <h3 className="text-2xl md:text-4xl lg:text-5xl font-black text-white font-mono uppercase tracking-tighter leading-none">
                           {selectedMentor.name}
                         </h3>
-                        <div className="flex items-center gap-2 mt-2">
+                        <div className="flex items-center justify-center md:justify-start gap-2 mt-2">
                           <div
                             className="h-[2px] w-8"
                             style={{ backgroundColor: theme.main }}
                           />
                           <h4
-                            className="text-sm md:text-base font-bold uppercase tracking-wide font-mono"
+                            className="text-xs md:text-base font-bold uppercase tracking-wide font-mono"
                             style={{ color: theme.main }}
                           >
                             {selectedMentor.dept}
@@ -1447,7 +1447,7 @@ export default function Home() {
                       {/* Bio with border-left */}
                       {selectedMentor.bio && (
                         <div
-                          className="pl-6 border-l-2 py-3 pr-3"
+                          className="pl-4 md:pl-6 border-l-2 py-2 md:py-3 pr-2 md:pr-3 text-left"
                           style={{
                             borderColor: theme.main,
                             backgroundColor: theme.bg,
@@ -1461,11 +1461,11 @@ export default function Home() {
 
                       {/* Specs in Grid Boxes */}
                       {selectedMentor.specs && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 mt-4 md:mt-8">
                           {selectedMentor.specs.map((spec, i) => (
                             <div
                               key={i}
-                              className="flex items-center gap-3 p-3 md:p-4 bg-zinc-950 border transition-all"
+                              className="flex items-center gap-3 p-2 md:p-4 bg-zinc-950 border transition-all text-left"
                               style={{
                                 borderColor: `${theme.main}33`, // roughly 20% opacity
                               }}
@@ -1480,12 +1480,12 @@ export default function Home() {
                               }}
                             >
                               <span
-                                className="font-bold text-sm"
+                                className="font-bold text-xs md:text-sm"
                                 style={{ color: theme.main }}
                               >
                                 &gt;
                               </span>
-                              <span className="text-zinc-300 font-mono text-[10px] md:text-xs uppercase tracking-wide">
+                              <span className="text-zinc-300 font-mono text-[9px] md:text-xs uppercase tracking-wide">
                                 {spec}
                               </span>
                             </div>
