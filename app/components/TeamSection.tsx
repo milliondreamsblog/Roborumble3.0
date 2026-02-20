@@ -90,6 +90,16 @@ const teamData = {
       ],
     },
     {
+      name: "Krishna Yadav",
+      role: "Disciplinary Head",
+      img: "/disciplinary_head.png",
+      socials: [
+        { icon: FaInstagram, link: "#" },
+        { icon: FaLinkedinIn, link: "#" },
+        { icon: HiOutlineMail, link: "#" },
+      ],
+    },
+    {
       name: "Mukesh Yadav",
       role: "Event Manager",
       img: "/mukesh copy.jpeg",
@@ -195,16 +205,6 @@ const teamData = {
       name: "Lucky Kumar",
       role: "PR & Media Head",
       img: "/lucky copy.jpeg",
-      socials: [
-        { icon: FaInstagram, link: "#" },
-        { icon: FaLinkedinIn, link: "#" },
-        { icon: HiOutlineMail, link: "#" },
-      ],
-    },
-    {
-      name: "Disciplinary Head",
-      role: "Disciplinary Head",
-      img: "/disciplinary_head.png",
       socials: [
         { icon: FaInstagram, link: "#" },
         { icon: FaLinkedinIn, link: "#" },
