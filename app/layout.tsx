@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
@@ -52,6 +53,7 @@ export default function RootLayout({
               </RegistrationGate>
               <CustomCursor />
             </AuthProvider>
+            <Analytics />
           </body>
         </html>
       </SessionProvider>
