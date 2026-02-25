@@ -94,9 +94,9 @@ const teamData = {
       role: "Disciplinary Head",
       img: "/disciplinary_head.png",
       socials: [
-        { icon: FaInstagram, link: "#" },
-        { icon: FaLinkedinIn, link: "#" },
-        { icon: HiOutlineMail, link: "#" },
+        { icon: FaInstagram, link: "https://www.instagram.com/krsna0031?igsh=MXZtcnZwbGRwNHpmdA==" },
+        { icon: FaLinkedinIn, link: "https://www.linkedin.com/in/krsna0031?utm_source=share_via&utm_content=profile&utm_medium=member_android" },
+        { icon: HiOutlineMail, link: "mailto:i.krsna0031@gmail.com" },
       ],
     },
     {
