@@ -66,7 +66,7 @@ const eventsData = [
     },
     {
         eventId: "project-expo",
-        title: "Project Expo",
+        title: "Showcase and Exhibition",
         category: "Innovation",
         description: "Showcase your hardware or software projects to industry experts.",
         teamSize: "1-4 Members",
@@ -141,6 +141,19 @@ const eventsData = [
         fees: 200,
         minTeamSize: 4,
         maxTeamSize: 4,
+    },
+    {
+        eventId: "dance-performance",
+        title: "Street Dance Battle",
+        category: "Performance",
+        description: "Hit the streets and own the stage. Whether you're a solo artist or a powerhouse crew, bring your rhythm and raw energy to the ultimate street dance showdown.",
+        teamSize: "1-5 Members",
+        prize: "Gift Hampers / Live Voting",
+        rules: ["Category: Solo or Group (3-5 members).", "Time Limit: 4–5 minutes per performance.", "Style: Any dance style is welcome."],
+        image: "/dance.png",
+        fees: 0,
+        minTeamSize: 1,
+        maxTeamSize: 5,
     },
 ];
 

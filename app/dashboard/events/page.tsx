@@ -697,7 +697,8 @@ export default function DashboardEventsPage() {
       const res = await fetch("/api/events");
       if (res.ok) {
         const data = await res.json();
-        setEvents(data.events || []);
+        const allEvents = data.events || [];
+        setEvents(allEvents.filter((e: any) => e.eventId !== "dance-performance"));
       }
     } catch (e) {
       console.error(e);
