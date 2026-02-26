@@ -48,7 +48,7 @@ export default function SchedulePage() {
         },
         {
           time: "03:00 PM",
-          title: "Project Expo",
+          title: "Showcase & Exhibition",
           venue: "Innovation Cell CSJMU",
           type: "Exhibition",
         },

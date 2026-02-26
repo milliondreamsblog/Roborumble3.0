@@ -250,4 +250,5 @@ export const events = [
     ],
     image: "/dance.png"
   }
+
 ];
