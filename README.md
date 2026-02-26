@@ -34,29 +34,28 @@
 
 ## 🎮 Events & Competitions
 
-### 1. **Robo Wars** 🤖⚔️
-The ultimate robot combat competition where custom-built machines battle for supremacy.
-- **Category**: Robotics
-- **Challenge**: Design and build combat-ready robots
-- **Objective**: Outlast opponents in tactical arena battles
+### 1. **Robotics Competitions** 🤖⚔️
+The core of Robo Rumble featuring multiple intense challenges for custom-built machines:
+- **Robo Wars**: The ultimate robot combat competition.
+- **Line Following Bot**: Precision robotics challenge testing autonomous navigation.
+- **Robo Soccer**: Manual wired/wireless robots competing to score goals.
+- **Robo Obstacle Race**: Test of speed, control, and mechanical efficiency navigating tracks.
+- **Pick and Drop**: Task-based challenge for object manipulation precision.
 
-### 2. **Line Follower** 🏁
-Precision robotics challenge testing autonomous navigation capabilities.
-- **Category**: Robotics
-- **Challenge**: Build autonomous line-following robots
-- **Objective**: Complete the track with maximum speed and accuracy
+### 2. **Aerial & Innovation** 🚀
+Showcasing aerial mastery and technical creativity:
+- **RC Flying**: Pilot fixed-wing aircraft through basic and precision maneuvers.
+- **Showcase & Exhibition**: Display innovative science projects and working models to experts.
 
-### 3. **E-Sports Tournament** 🎮
-Competitive gaming across multiple popular titles.
-- **Category**: Gaming
-- **Challenge**: Team-based competitive gaming
-- **Objective**: Dominate the digital battlefield
+### 3. **Seminars & Exhibitions** �
+Learning and exploration opportunities:
+- **Defence Talk**: Informative sessions on modern defense technologies.
+- **Defence Expo**: Exhibition showcasing defense tech, equipment, and innovations.
 
-### 4. **Additional Events**
-- Technical workshops
-- Coding competitions
-- Innovation showcases
-- Industry talks and seminars
+### 4. **E-Sports & Performance** 🎮🕺
+Digital battlegrounds and creative expression:
+- **E-SPORTS**: Competitive digital arena featuring BGMI and Free Fire.
+- **Street Dance Battle**: The ultimate street dance showdown for solos and crews.
 
 ---
 
