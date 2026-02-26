@@ -93,19 +93,31 @@ export async function GET(req: Request) {
         // Enrich with leaderFullName and handle fallback for leaderPhone
         const enrichedSubmissions = await Promise.all(
             (submissions as unknown as EnrichedSubmission[]).map(async (sub) => {
-                const profile = await Profile.findOne({
-                    $or: [
-                        { clerkId: sub.clerkId },
-                        ...(mongoose.Types.ObjectId.isValid(sub.clerkId) ? [{ _id: sub.clerkId }] : [])
-                    ]
-                }).select("firstName lastName username phone") as PopulatedMember | null;
+                let profile = null;
+                try {
+                    profile = await Profile.findOne({
+                        $or: [
+                            { clerkId: sub.clerkId },
+                            ...(mongoose.Types.ObjectId.isValid(sub.clerkId) ? [{ _id: sub.clerkId }] : [])
+                        ]
+                    }).select("firstName lastName username phone") as PopulatedMember | null;
+                } catch (err) {
+                    console.error("Profile lookup error in payments GET:", err);
+                }
 
                 const leaderFullName = profile
                     ? [profile.firstName, profile.lastName].filter(Boolean).join(" ") || profile.username || sub.leaderName
                     : sub.leaderName;
 
+                // Ensure events and members exist without crashing
+                const safeEvents = (sub.events || []).map(eventItem => ({
+                    ...eventItem,
+                    selectedMembers: Array.isArray(eventItem.selectedMembers) ? eventItem.selectedMembers : []
+                }));
+
                 return {
                     ...sub,
+                    events: safeEvents,
                     leaderFullName,
                     leaderPhone: sub.leaderPhone || profile?.phone || "N/A"
                 };
@@ -116,8 +128,6 @@ export async function GET(req: Request) {
             pending: await PaymentSubmission.countDocuments({ status: "pending", screenshotUrl: { $ne: "FREE_EVENT" } }),
             verified: await PaymentSubmission.countDocuments({ status: "verified", screenshotUrl: { $ne: "FREE_EVENT" } }),
             rejected: await PaymentSubmission.countDocuments({ status: "rejected", screenshotUrl: { $ne: "FREE_EVENT" } }),
-            // REVENUE RESET: Only count payments verified after Feb 15, 2026 12:20 PM IST
-            // ISO: 2026-02-15T06:50:00.000Z
             totalRevenue: (await PaymentSubmission.aggregate([
                 { 
                     $match: { 
@@ -134,10 +144,10 @@ export async function GET(req: Request) {
             submissions: enrichedSubmissions,
             stats,
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error("Admin Payments GET Error:", error);
         return NextResponse.json(
-            { error: "Failed to fetch submissions" },
+            { error: "Failed to fetch submissions", details: error?.message || "Unknown error" },
             { status: 500 }
         );
     }
