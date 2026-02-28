@@ -562,8 +562,10 @@ const HorizontalEventCard = ({
                     Next →
                   </button>
                 </div>
+              </>
+            )}
 
-                {/* Coordinator Step */}
+            {/* Coordinator Step */}
                 {rosterStep === "coordinator" && (
                   <div className="fixed inset-0 z-[10000] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
                     <div className="bg-[#111] border border-[#E661FF] rounded-xl max-w-md w-full p-6 shadow-[0_0_50px_rgba(230,97,255,0.3)]">
@@ -651,8 +653,6 @@ const HorizontalEventCard = ({
                     </div>
                   </div>
                 )}
-              </>
-            )}
           </div>
         </div>
       )}
