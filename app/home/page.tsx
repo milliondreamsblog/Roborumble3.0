@@ -654,7 +654,7 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-12 text-zinc-500 font-mono text-sm mb-16">
             <div className="flex items-center gap-3">
               <Calendar size={18} className="text-[#E661FF]" />
-              <span className="tracking-tighter">COMING_SOON</span>
+              <span className="tracking-tighter">16-18 March</span>
             </div>
             <div className="flex items-center gap-3">
               <MapPin size={18} className="text-[#E661FF]" />
@@ -662,7 +662,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative z-20 mb-12 text-center w-full px-4 transform rotate-[-2.5deg]">
+          <div className="relative z-20 mb-12 text-center w-full px-4 transform">
             <div className={`${iceberg.className} flex flex-col items-center gap-1`}>
               <span className="text-xl sm:text-2xl md:text-3xl text-zinc-400 font-bold uppercase tracking-[0.3em]">
                 Prize Pool
