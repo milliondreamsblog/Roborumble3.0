@@ -34,11 +34,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
+    const isAdmin = user.role === "ADMIN";
+    const expiresIn = isAdmin ? "30m" : "7d";
+    const maxAge = isAdmin ? 60 * 30 : 60 * 60 * 24 * 7; // 30 mins or 7 days
+
     // Create Token
     const token = jwt.sign(
       { userId: user._id.toString(), email: user.email, role: user.role },
       process.env.JWT_SECRET || "default_secret",
-      { expiresIn: "7d" }
+      { expiresIn }
     );
 
     // Set Cookie
@@ -46,7 +50,7 @@ export async function POST(req: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge,
       path: "/",
     });
 
