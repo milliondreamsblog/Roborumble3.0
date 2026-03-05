@@ -630,7 +630,7 @@ export default function Home() {
             </Link>
 
             <a
-              href="/RoboRumble.pdf"
+              href="/RR.pdf"
               target="_blank"
               rel="noopener noreferrer"
               download="RoboRumble_Brochure.pdf"
