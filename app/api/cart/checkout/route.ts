@@ -72,6 +72,8 @@ export async function POST(req: Request) {
                     total += hasExistingPaidEvent ? 150 : 180;
                 } else if (event.eventId === "band-show") {
                     total += item.ticketType === "couple" ? 399 : 249;
+                } else if (event.eventId === "robo-obstacle-race") {
+                    total += 400;
                 } else {
                     total += event.fees || 0;
                 }
@@ -166,7 +168,7 @@ export async function POST(req: Request) {
                             ? (hasExistingPaidEventValue ? 150 : 180)
                             : (event.eventId === "band-show"
                                 ? (item.ticketType === "couple" ? 399 : 249)
-                                : event.fees),
+                                : (event.eventId === "robo-obstacle-race" ? 400 : event.fees)),
                         gameChoice: item.gameChoice,
                     },
                 },
@@ -256,6 +258,8 @@ export async function GET() {
                     total += hasExistingPaidEvent ? 150 : 180;
                 } else if (event.eventId === "band-show") {
                     total += item.ticketType === "couple" ? 399 : 249;
+                } else if (event.eventId === "robo-obstacle-race") {
+                    total += 400;
                 } else {
                     total += event.fees || 0;
                 }
@@ -274,6 +278,8 @@ export async function GET() {
                 finalFee = hasExistingPaidEventValue ? 150 : 180;
             } else if (event.eventId === "band-show") {
                 finalFee = item.ticketType === "couple" ? 399 : 249;
+            } else if (event.eventId === "robo-obstacle-race") {
+                finalFee = 400;
             }
 
             return {
