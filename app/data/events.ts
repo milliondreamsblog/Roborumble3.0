@@ -263,7 +263,7 @@ export const events = [
     title: "Silent DJ",
     category: "Entertainment",
     icon: Music,
-    desc: "Dance to your own beat! Put on your headphones and choose your music in this unique DJ experience. (On Desk Registration Only)\nBook at Lecture Hall Complex from 10\:30 AM to 4\:30 PM",
+    desc: "Dance to your own beat!\nBook at Lecture Hall Complex from 10\:30 AM to 4\:30 PM",
     teamSize: "Individual",
     prize: "N/A",
     cost: 0,
