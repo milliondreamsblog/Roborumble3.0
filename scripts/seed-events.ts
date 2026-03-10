@@ -86,7 +86,7 @@ const eventsData = [
         prize: "₹20,000 Pool",
         rules: ["Dimensions: 30x30x25 cm Max.", "Weight: Max 2kg (+5% tolerance).", "Power: Electric only, Max 12V DC.", "Wired (15m cable) or Wireless allowed."],
         image: "/robo-race.jpeg",
-        fees: 300,
+        fees: 400,
         minTeamSize: 3,
         maxTeamSize: 5,
     },

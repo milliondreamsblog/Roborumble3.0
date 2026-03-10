@@ -67,8 +67,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Event is fully booked" }, { status: 400 });
         }
 
+        const actualFee = eventId === "robo-obstacle-race" ? 400 : event.fees;
+
         // Handle free events
-        if (event.fees === 0) {
+        if (actualFee === 0) {
             await Profile.findOneAndUpdate(
                 { email },
                 {
@@ -99,7 +101,7 @@ export async function POST(req: Request) {
         }
 
         // Create Razorpay order for paid events
-        const amountInPaise = event.fees * 100;
+        const amountInPaise = actualFee * 100;
 
         const order = await razorpay.orders.create({
             amount: amountInPaise,

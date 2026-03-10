@@ -44,6 +44,8 @@ export async function POST(req: Request) {
         // Type assertion to ensure _id exists
         const profileId = profile._id as mongoose.Types.ObjectId;
 
+        const actualFee = eventId === 'robo-obstacle-race' ? 400 : event.fees;
+
         // --- TEAM REGISTRATION FLOW ---
         if (teamId && Array.isArray(selectedMembers) && selectedMembers.length > 0) {
             const team = await Team.findById(teamId);
@@ -82,15 +84,15 @@ export async function POST(req: Request) {
                 teamId,
                 eventId: event._id,
                 selectedMembers,
-                paymentStatus: event.fees === 0 ? "paid" : "initiated",
-                amountExpected: event.fees,
+                paymentStatus: actualFee === 0 ? "paid" : "initiated",
+                amountExpected: actualFee,
                 currency: "INR",
                 universityId,
                 ticketType
             });
 
             // Lock team for paid events (prevent disband/leave after registration)
-            if (event.fees > 0) {
+            if (actualFee > 0) {
                 await Team.findByIdAndUpdate(teamId, { isLocked: true });
             }
 
@@ -104,7 +106,7 @@ export async function POST(req: Request) {
             );
 
             // If free, mark as paid
-            if (event.fees === 0) {
+            if (actualFee === 0) {
                 await Profile.updateMany(
                     { _id: { $in: selectedMembers } },
                     { $addToSet: { paidEvents: eventId } }
@@ -120,7 +122,7 @@ export async function POST(req: Request) {
                 registrationId: newRegistration._id,
                 eventId,
                 eventTitle: event.title,
-                fees: event.fees
+                fees: actualFee
             }, { status: 200 });
         }
 
@@ -140,8 +142,8 @@ export async function POST(req: Request) {
         const newRegistration = await Registration.create({
             eventId: event._id,
             selectedMembers: [profileId], // Individual participant
-            paymentStatus: event.fees === 0 ? "paid" : "initiated",
-            amountExpected: event.fees,
+            paymentStatus: actualFee === 0 ? "paid" : "initiated",
+            amountExpected: actualFee,
             currency: "INR",
             universityId,
             ticketType
@@ -157,7 +159,7 @@ export async function POST(req: Request) {
         );
 
         // For free events, also add to paidEvents and increment count
-        if (event.fees === 0) {
+        if (actualFee === 0) {
             await Profile.findByIdAndUpdate(
                 profileId,
                 { $addToSet: { paidEvents: eventId } }
@@ -173,7 +175,7 @@ export async function POST(req: Request) {
             registrationId: newRegistration._id,
             eventId,
             eventTitle: event.title,
-            fees: event.fees
+            fees: actualFee
         }, { status: 200 });
 
     } catch (error) {
