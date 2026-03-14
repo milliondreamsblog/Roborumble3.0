@@ -37,7 +37,7 @@ export default function SchedulePage() {
         {
           time: "10:00 AM",
           title: "Defence Expo",
-          venue: "Senate Ground",
+          venue: "UIET Garden",
           type: "Exhibition",
         },
         {
@@ -68,7 +68,7 @@ export default function SchedulePage() {
         {
           time: "03:00 PM",
           title: "Showcase and Exhibition",
-          venue: "Senate Ground",
+          venue: "UIET Garden",
           type: "Exhibition",
         },
       ],
@@ -131,19 +131,19 @@ export default function SchedulePage() {
         },
         {
           time: "10:00 AM",
-          title: "Robo War(Finals)",
+          title: "Robo War (Finals)",
           venue: "OAT-UIET",
           type: "Competition",
         },
         {
           time: "10:00 AM",
-          title: "Robo Soccer(Finals)",
+          title: "Robo Soccer (Finals)",
           venue: "OAT-UIET",
           type: "Competition",
         },
         {
           time: "10:00 AM",
-          title: "Esports(Finals)",
+          title: "Esports (Finals)",
           venue: "Innovation Cell",
           type: "Competition",
         },

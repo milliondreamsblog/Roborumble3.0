@@ -26,7 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     log("Missing email or password");
                     return null;
                 }
-                
+
                 try {
                     log("Connecting to DB...");
                     await connectDB();
@@ -34,14 +34,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     log(`Finding user with email: [${email}]`);
                     const user = await Profile.findOne({ email }).select("+password").lean();
                     log(`User found: ${!!user}`);
-                    
+
                     if (!user) {
                         log(`No user found with email: ${credentials.email}`);
                         return null;
                     }
-                    
+
                     log(`Available fields: ${Object.keys(user).join(", ")}`);
-                    
+
                     if (!user.password) {
                         log("User has no password field in the database results");
                         return null;
@@ -139,7 +139,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     session.user.firstName = dbUser.firstName;
                     // @ts-ignore
                     session.user.lastName = dbUser.lastName;
-                    
+
                     // Sync name and image if they exist in DB
                     if (dbUser.firstName) {
                         session.user.name = `${dbUser.firstName} ${dbUser.lastName || ""}`.trim();

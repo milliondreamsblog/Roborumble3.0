@@ -58,16 +58,17 @@ interface EventData {
   ticketTypes?: { [key: string]: number };
   phasedCap?: number;
   externalRegistrationLink?: string;
+  venue?: string;
 }
 
 interface RegistrationStatus {
   eventId: string;
   status:
-    | "registered"
-    | "paid"
-    | "pending"
-    | "verification_pending"
-    | "manual_verified";
+  | "registered"
+  | "paid"
+  | "pending"
+  | "verification_pending"
+  | "manual_verified";
 }
 
 // --- Icons Mapping ---
@@ -102,7 +103,11 @@ const formatDate = (dateStr?: string) => {
     month: "short",
     day: "numeric",
   });
-  const time = "9:00 AM"; // Default time
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const displayHour = hours % 12 || 12;
+  const time = `${displayHour}:${minutes.toString().padStart(2, "0")} ${ampm}`;
   return { day, month, fullDate, time };
 };
 
@@ -397,7 +402,7 @@ const HorizontalEventCard = ({
               <div className="h-1 w-1 bg-zinc-700 rounded-full" />
 
               <span className="text-zinc-500 text-xs font-mono flex items-center gap-1">
-                <MapPin size={12} /> CSJMU
+                <MapPin size={12} /> {event.venue || "CSJMU"}
               </span>
             </div>
           </div>
@@ -563,11 +568,10 @@ const HorizontalEventCard = ({
                             setRosterStep("members");
                           }
                         }}
-                        className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${
-                          ticketType === type
+                        className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${ticketType === type
                             ? "border-[#00F0FF] bg-[#00F0FF]/10"
                             : "border-zinc-700/50 bg-zinc-800/30 hover:border-zinc-500"
-                        }`}
+                          }`}
                       >
                         <span className="text-white font-black font-mono text-sm uppercase tracking-wide">
                           {type}
@@ -682,12 +686,11 @@ const HorizontalEventCard = ({
                           Selected
                         </div>
                         <div
-                          className={`font-bold font-mono ${
-                            selectedMembers.length < minTeamSize ||
-                            selectedMembers.length > maxTeamSize
+                          className={`font-bold font-mono ${selectedMembers.length < minTeamSize ||
+                              selectedMembers.length > maxTeamSize
                               ? "text-red-500"
                               : "text-[#00F0FF]"
-                          }`}
+                            }`}
                         >
                           {selectedMembers.length} /{" "}
                           {minTeamSize === maxTeamSize
@@ -702,11 +705,10 @@ const HorizontalEventCard = ({
                     {activeTeam?.members?.map((member: any) => (
                       <label
                         key={member._id}
-                        className={`flex items-center gap-3 p-3 border rounded cursor-pointer transition-all ${
-                          selectedMembers.includes(member._id)
+                        className={`flex items-center gap-3 p-3 border rounded cursor-pointer transition-all ${selectedMembers.includes(member._id)
                             ? "bg-[#00F0FF]/10 border-[#00F0FF]"
                             : "bg-zinc-900/50 border-zinc-800 hover:border-zinc-600"
-                        }`}
+                          }`}
                       >
                         <input
                           type="checkbox"
@@ -728,11 +730,10 @@ const HorizontalEventCard = ({
                           }}
                         />
                         <div
-                          className={`w-4 h-4 border flex items-center justify-center ${
-                            selectedMembers.includes(member._id)
+                          className={`w-4 h-4 border flex items-center justify-center ${selectedMembers.includes(member._id)
                               ? "border-[#00F0FF] bg-[#00F0FF]"
                               : "border-zinc-600"
-                          }`}
+                            }`}
                         >
                           {selectedMembers.includes(member._id) && (
                             <div className="w-2 h-2 bg-black" />
@@ -1170,11 +1171,10 @@ export default function DashboardEventsPage() {
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-4 py-2 rounded-full text-xs font-bold font-mono transition-all ${
-                activeFilter === filter
+              className={`px-4 py-2 rounded-full text-xs font-bold font-mono transition-all ${activeFilter === filter
                   ? "bg-[#eab308] text-black hover:bg-[#eab308]/90"
                   : "bg-zinc-900 border border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-white"
-              }`}
+                }`}
             >
               {filter}
             </button>
@@ -1184,11 +1184,10 @@ export default function DashboardEventsPage() {
 
       {message.text && (
         <div
-          className={`px-4 py-3 rounded-lg mb-8 border font-mono text-sm ${
-            message.type === "success"
+          className={`px-4 py-3 rounded-lg mb-8 border font-mono text-sm ${message.type === "success"
               ? "bg-green-500/10 border-green-500/50 text-green-400"
               : "bg-red-500/10 border-red-500/50 text-red-400"
-          }`}
+            }`}
         >
           {message.text}
         </div>
