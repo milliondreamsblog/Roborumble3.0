@@ -143,6 +143,7 @@ const HorizontalEventCard = ({
   const [showRosterDialog, setShowRosterDialog] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
   const [gameChoice, setGameChoice] = useState<"" | "FreeFire" | "BGMI">("");
+  const [showClosedDialog, setShowClosedDialog] = useState(false);
   const [rosterStep, setRosterStep] = useState<
     "game" | "members" | "coordinator" | "ticket" | "id" | "partner"
   >("members");
@@ -193,6 +194,11 @@ const HorizontalEventCard = ({
   }, [activeProfileId]);
 
   const handleRegisterClick = () => {
+    if (event.category !== "Entertainment") {
+      setShowClosedDialog(true);
+      return;
+    }
+
     // Check if extra info is needed (ID or Ticket Type) even for individual events
     if (event.ticketTypes || event.requiresUniversityId) {
       setShowRosterDialog(true);
@@ -460,23 +466,36 @@ const HorizontalEventCard = ({
                 <Loader2 size={14} className="animate-spin" /> Adding...
               </button>
             ) : event.externalRegistrationLink ? (
-              <a
-                href={event.externalRegistrationLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full"
-              >
-                <button className="w-full px-4 py-2 bg-white text-black font-black font-mono text-xs rounded-lg uppercase hover:bg-[#00F0FF] transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_20px_rgba(0,240,255,0.4)]">
-                  <Plus size={14} /> Register Here
-                </button>
-              </a>
+              <div className="w-full">
+                {event.category === "Entertainment" ? (
+                  <a
+                    href={event.externalRegistrationLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <button className="w-full px-4 py-2 bg-white text-black font-black font-mono text-xs rounded-lg uppercase hover:bg-[#00F0FF] transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_20px_rgba(0,240,255,0.4)]">
+                      <Plus size={14} /> Register Here
+                    </button>
+                  </a>
+                ) : (
+                  <button
+                    onClick={() => setShowClosedDialog(true)}
+                    className="w-full px-4 py-2 bg-zinc-800 text-zinc-500 font-bold font-mono text-xs rounded-lg uppercase flex items-center justify-center gap-2 transition-all hover:bg-zinc-700 hover:text-zinc-300"
+                  >
+                    <XCircle size={14} /> Closed
+                  </button>
+                )}
+              </div>
             ) : event.isOffline ? (
               <div className="text-center w-full">
-                <p className="text-[#E661FF] font-black font-mono text-[10px] uppercase mb-1">
-                  On-Desk Only
+                <p className={`${event.category === "Entertainment" ? "text-[#E661FF]" : "text-zinc-600"} font-black font-mono text-[10px] uppercase mb-1`}>
+                  {event.category === "Entertainment" ? "On-Desk Only" : "Registration Closed"}
                 </p>
-                <div className="px-4 py-2 bg-zinc-800/50 border border-zinc-700 text-zinc-400 font-bold font-mono text-[10px] rounded-lg uppercase">
-                  Register at Desk
+                <div 
+                  onClick={() => event.category !== "Entertainment" && setShowClosedDialog(true)}
+                  className={`px-4 py-2 ${event.category === "Entertainment" ? "bg-zinc-800/50 border-zinc-700 text-zinc-400" : "bg-red-500/10 border-red-500/20 text-red-400/50"} border font-bold font-mono text-[10px] rounded-lg uppercase ${event.category !== "Entertainment" ? "cursor-pointer hover:bg-red-500/20" : ""}`}
+                >
+                  {event.category === "Entertainment" ? "Register at Desk" : "Closed"}
                 </div>
               </div>
             ) : (
@@ -891,6 +910,30 @@ const HorizontalEventCard = ({
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+      {/* Registration Closed Dialog */}
+      {showClosedDialog && (
+        <div className="fixed inset-0 z-[10000] bg-black/95 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#111] border border-red-500/50 rounded-2xl max-w-sm w-full p-8 shadow-[0_0_50px_rgba(239,68,68,0.2)] text-center">
+            <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/20">
+              <AlertTriangle size={40} className="text-red-500 animate-pulse" />
+            </div>
+            <h3 className="text-2xl font-black text-white font-mono mb-4 uppercase tracking-tighter">
+              Registration Closed
+            </h3>
+            <p className="text-zinc-400 text-sm font-mono leading-relaxed mb-8">
+              We're sorry, but registrations for <span className="text-white font-bold">{event.title}</span> are now officially closed.
+              <br/><br/>
+              <span className="text-xs text-zinc-500">Only Entertainment category events remain open for on-spot booking.</span>
+            </p>
+            <button
+              onClick={() => setShowClosedDialog(false)}
+              className="w-full py-4 bg-red-500 text-white font-black font-mono uppercase text-sm tracking-widest hover:bg-red-400 transition-all rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+            >
+              Understand
+            </button>
           </div>
         </div>
       )}
