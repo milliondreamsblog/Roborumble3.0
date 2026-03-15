@@ -552,8 +552,7 @@ export default function Home() {
                   System Alert
                 </h4>
                 <p className="text-white font-mono text-lg leading-relaxed mb-6">
-                  Registrations are now open to all events.
-                  New Events are addded.
+                  Registrations for <span className="text-[#00F0FF] font-bold">SILENT DJ</span> & <span className="text-[#E661FF] font-bold">BAND SHOW</span> are now live!
                 </p>
                 <Link href="/events" onClick={() => setShowPopup(false)}>
                   <button className="text-sm uppercase font-mono font-black tracking-[0.25em] text-black bg-[#FF003C] px-8 py-3 hover:bg-white hover:scale-105 transition-all w-full md:w-auto text-center border-2 border-[#FF003C] shadow-[0_0_20px_rgba(255,0,60,0.6)]">
@@ -587,17 +586,22 @@ export default function Home() {
           <motion.div
             className="flex whitespace-nowrap gap-8 cursor-pointer"
             animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
           >
-            {Array(20)
-              .fill("★ REGISTRATIONS LIVE! CLICK TO REGISTER ★ ")
-              .map((text, i) => (
-                <span
-                  key={i}
-                  className="text-black font-black italic tracking-widest text-sm md:text-base font-['Orbitron'] hover:text-white transition-colors"
-                >
-                  {text}
-                </span>
+            {Array(10)
+              .fill(null)
+              .map((_, i) => (
+                <div key={i} className="flex gap-8 items-center">
+                  <span className="text-black font-black italic tracking-widest text-sm md:text-base font-['Orbitron'] hover:text-white transition-colors">
+                    ★ SILENT DJ & BAND SHOW REGISTRATION NOW OPEN! ★
+                  </span>
+                  <span className="text-black font-black italic tracking-widest text-sm md:text-base font-['Orbitron'] hover:text-white transition-colors">
+                    ★ ACCESS GRANTED TO ALL EVENTS ★
+                  </span>
+                  <span className="text-black font-black italic tracking-widest text-sm md:text-base font-['Orbitron'] hover:text-white transition-colors">
+                    ★ REGISTER BEFORE SLOTS FILL! ★
+                  </span>
+                </div>
               ))}
           </motion.div>
         </Link>
