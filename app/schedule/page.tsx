@@ -148,7 +148,7 @@ export default function SchedulePage() {
           type: "Competition",
         },
         {
-          time: "04:00 PM",
+          time: "04:30 PM",
           title: "Band Show",
           venue: "Helipad",
           type: "Performance",

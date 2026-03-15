@@ -27,6 +27,7 @@ export const events = [
       "Track Length: 16+ meters, Width: 35 cm.",
       "Obstacles: Block pushing, speed breakers, marble pit, slippery path, rotating disc, curved ramp, seesaw."
     ],
+    date: "2026-03-16T10:00:00",
     image: "/robo-race.jpeg"
   },
   {
@@ -53,6 +54,7 @@ export const events = [
     gameplay: [
       "Arena Hazards: Saws, cutters, flame-throwers, ditches."
     ],
+    date: "2026-03-17T10:00:00",
     image: "/robo-war.jpeg"
   },
   {
@@ -78,6 +80,7 @@ export const events = [
       "Track: Black line (3-4cm) on white.",
       "Features: Sharp turns, curves, intersections."
     ],
+    date: "2026-03-18T10:00:00",
     image: "/line-following-robot.jpeg"
   },
   {
@@ -101,6 +104,7 @@ export const events = [
       "Weight: Max 5 kg (+10% tolerance).",
       "Power: Max 24V DC. (230V AC avail)."
     ],
+    date: "2026-03-17T10:00:00",
     image: "/robo-soccer.jpeg"
   },
   {
@@ -122,6 +126,7 @@ export const events = [
       "Weight: Max 5 kg.",
       "Mechanism: Grippers, claws, magnets, or suction only. No dragging."
     ],
+    date: "2026-03-16T10:00:00",
     image: "/pick-place.jpeg"
   },
   {
@@ -144,6 +149,7 @@ export const events = [
       "Weight: Max 2 kg.",
       "Power: Electric Motor (Max 6S Li-Po)."
     ],
+    date: "2026-03-17T10:00:00",
     image: "/rc flying.jpeg"
   },
   {
@@ -165,6 +171,7 @@ export const events = [
     gameplay: [
       "Scoring: Placement (1st=12pts, 2nd=9pts...) + 1pt per kill."
     ],
+    date: "2026-03-17T10:00:00",
     image: "/e-sports.jpeg"
   },
   {
@@ -180,6 +187,7 @@ export const events = [
     rules: [
       "Criteria: Usability, Innovation, Presentation, Uniqueness."
     ],
+    date: "2026-03-16T15:00:00",
     image: "/exhibition.jpeg"
   },
   {
@@ -196,6 +204,7 @@ export const events = [
       "Open to registered participants.",
       "Q&A restricted to designated sessions."
     ],
+    date: "2026-03-16T14:00:00",
     image: "/defence-talk.jpeg"
   },
   {
@@ -221,6 +230,7 @@ export const events = [
       "Encourage student participation, creativity, and technical learning.",
       "Highlight the role of technology in national security and defense preparedness."
     ],
+    date: "2026-03-16T10:00:00",
     image: "/defence-expo.jpeg"
   },
 
@@ -239,6 +249,7 @@ export const events = [
       "Safety gear must be worn at all times.",
       "Follow track marshals' instructions."
     ],
+    date: "2026-03-16T10:00:00",
     image: "/gokart.jpeg"
   },
   {
@@ -256,6 +267,7 @@ export const events = [
       "Safety equipment provided must be worn.",
       "No headshots or point-blank shots allowed."
     ],
+    date: "2026-03-16T10:00:00",
     image: "/paintball.jpeg"
   },
   {
@@ -277,6 +289,7 @@ export const events = [
       "Register via the provided Google Form link."
     ],
     externalRegistrationLink: "https://forms.gle/ssy8ihxQvos2hi7M7",
+    date: "2026-03-17T16:00:00",
     image: "/silent-dj.jpeg"
   },
   {
@@ -293,8 +306,11 @@ export const events = [
     },
     requiresUniversityId: true,
     rules: [
-      "Compulsory to carry your University ID to enter."
+      "Compulsory to carry your University ID to enter.",
+      "Register via the provided Google Form link."
     ],
+    externalRegistrationLink: "https://forms.gle/4B61dvHzZZoLh2Ui7",
+    date: "2026-03-18T16:30:00",
     image: "/band-show.jpeg"
   }
 ];

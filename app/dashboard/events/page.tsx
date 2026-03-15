@@ -102,7 +102,11 @@ const formatDate = (dateStr?: string) => {
     month: "short",
     day: "numeric",
   });
-  const time = "9:00 AM"; // Default time
+  const time = date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
   return { day, month, fullDate, time };
 };
 
@@ -406,12 +410,12 @@ const HorizontalEventCard = ({
             {event.ticketTypes || event.fees > 0 ? (
               <div className="text-center">
                 <p className="text-zinc-500 text-[10px] uppercase font-mono mb-1">
-                  {event.ticketTypes ? "Select" : "Entry Fee"}
+                  {event.ticketTypes ? "" : "Entry Fee"}
                 </p>
                 <p className="text-xl font-black text-white">
                   {event.ticketTypes ? (
                     <span className="text-xs uppercase text-[#E661FF]">
-                      Ticket Type
+                      
                     </span>
                   ) : (
                     `₹${event.fees}`

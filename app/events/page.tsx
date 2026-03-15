@@ -43,6 +43,7 @@ interface EventData {
   video?: string; // Optional: Path to background video
   image?: string; // Optional: Path to background image
   brochureLink?: string; // Optional: Link to event brochure
+  externalRegistrationLink?: string; // Optional: Google Form link
 }
 
 // --- Internal Component: Animated Backgrounds ---
@@ -307,12 +308,23 @@ const EventCard = ({
                         Status: Registration Open
                       </div>
 
-                      <Link
-                        href="/dashboard/events"
-                        className="w-full py-3 block bg-[#E661FF] text-black font-mono font-black uppercase tracking-widest hover:bg-white hover:shadow-[0_0_20px_rgba(230,97,255,0.5)] transition-all text-xs border border-[#E661FF] text-center"
-                      >
-                        REGISTER_VIA_DASHBOARD
-                      </Link>
+                      {event.externalRegistrationLink ? (
+                        <a
+                          href={event.externalRegistrationLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-3 block bg-[#00F0FF] text-black font-mono font-black uppercase tracking-widest hover:bg-white hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] transition-all text-xs border border-[#00F0FF] text-center"
+                        >
+                          REGISTER_NOW (GOOGLE_FORM)
+                        </a>
+                      ) : (
+                        <Link
+                          href="/dashboard/events"
+                          className="w-full py-3 block bg-[#E661FF] text-black font-mono font-black uppercase tracking-widest hover:bg-white hover:shadow-[0_0_20px_rgba(230,97,255,0.5)] transition-all text-xs border border-[#E661FF] text-center"
+                        >
+                          REGISTER_VIA_DASHBOARD
+                        </Link>
+                      )}
                     </div>
                   </div>
 
@@ -447,23 +459,39 @@ const EventCard = ({
                             />
                             <div>
                               <h4 className="text-2xl font-black text-white font-mono uppercase mb-2">
-                                Registration Required
+                                {event.externalRegistrationLink ? "External Registration" : "Registration Required"}
                               </h4>
                               <p className="text-zinc-400 font-mono text-xs max-w-sm mx-auto">
-                                All mission deployments must be initialized
-                                through the central dashboard command center.
+                                {event.externalRegistrationLink 
+                                  ? "This event uses an external registration system. Please complete the form to secure your spot."
+                                  : "All mission deployments must be initialized through the central dashboard command center."}
                               </p>
                             </div>
-                            <Link
-                              href="/dashboard/events"
-                              className="inline-flex items-center gap-2 px-8 py-4 bg-[#00F0FF] text-black font-black font-mono tracking-widest hover:bg-white transition-all uppercase text-sm"
-                              style={{
-                                clipPath:
-                                  "polygon(0 0, 95% 0, 100% 30%, 100% 100%, 5% 100%, 0 70%)",
-                              }}
-                            >
-                              <Zap size={16} /> GO_TO_DASHBOARD
-                            </Link>
+                            {event.externalRegistrationLink ? (
+                              <a
+                                href={event.externalRegistrationLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-8 py-4 bg-[#00F0FF] text-black font-black font-mono tracking-widest hover:bg-white transition-all uppercase text-sm"
+                                style={{
+                                  clipPath:
+                                    "polygon(0 0, 95% 0, 100% 30%, 100% 100%, 5% 100%, 0 70%)",
+                                }}
+                              >
+                                <Zap size={16} /> GO_TO_GOOGLE_FORM
+                              </a>
+                            ) : (
+                              <Link
+                                href="/dashboard/events"
+                                className="inline-flex items-center gap-2 px-8 py-4 bg-[#E661FF] text-black font-black font-mono tracking-widest hover:bg-white transition-all uppercase text-sm"
+                                style={{
+                                  clipPath:
+                                    "polygon(0 0, 95% 0, 100% 30%, 100% 100%, 5% 100%, 0 70%)",
+                                }}
+                              >
+                                <Zap size={16} /> GO_TO_DASHBOARD
+                              </Link>
+                            )}
                           </div>
                         )}
                       </div>
